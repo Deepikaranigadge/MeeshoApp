@@ -1,0 +1,623 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Success</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body{
+      margin:0;
+      background:#f5f6f8;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ✅ HEADER (Meesho style) */
+    .header{
+      background:#fff;
+      border-bottom:1px solid #e7e7ee;
+      padding:12px 28px;
+      display:flex;
+      align-items:center;
+      gap:24px;
+    }
+
+    .top-links{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      margin-left:auto;
+    }
+
+    .top-link{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:14px;
+      font-weight:500;
+      color:#222;
+      text-decoration:none;
+      padding:6px 4px;
+      white-space:nowrap;
+    }
+    .top-link:hover{ color:#9f2089; }
+
+    .sep{
+      width:1px;
+      height:26px;
+      background:#e1e1e8;
+      margin:0 2px;
+    }
+    .ico{ font-size:18px; }
+
+    /* ✅ PAGE (your existing CSS) */
+    .wrap{ max-width:1150px; margin:26px auto; padding:0 16px; }
+    .grid{ display:grid; grid-template-columns: 1.55fr 1fr; gap:22px; align-items:start; }
+
+    .card{
+      background:#fff;
+      border:1px solid #e7e7ee;
+      border-radius:10px;
+      overflow:hidden;
+    }
+
+    .success{
+      background:#dff7ee;
+      border:1px solid #bfeede;
+      border-radius:10px;
+      padding:16px 18px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:16px;
+    }
+    .check{
+      width:26px; height:26px; border-radius:50%;
+      background:#10a36a;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:500;
+      margin-top:2px;
+      flex:0 0 auto;
+    }
+    .success h3{ margin:0; font-size:18px; font-weight:500; color:#111; }
+    .success .id{ margin-top:4px; color:#555; font-size:13px; }
+
+    .section-title{
+      font-size:20px; font-weight:500; color:#111;
+      margin:14px 0 10px;
+    }
+
+    .phead{
+      display:flex; gap:10px; align-items:center;
+      padding:14px 16px;
+      border-bottom:1px solid #eee;
+      font-weight:500;
+    }
+    .truck{ font-size:18px; }
+    .phead span{ color:#111; }
+
+    .pbody{ padding:14px 16px; }
+    .prow{ display:flex; gap:14px; }
+    .pimg{
+      width:68px; height:68px; border-radius:8px;
+      border:1px solid #eee;
+      object-fit:cover;
+      background:#fafafa;
+    }
+    .ptitle{ font-size:16px; font-weight:500; margin:0 0 4px; color:#111; }
+    .pprice{ font-size:16px; font-weight:500; margin:0 0 8px; color:#111; }
+    .psub{ color:#3b3b3b; margin:0 0 6px; font-size:14px; }
+    .pmeta{ color:#111; font-size:14px; margin:0; }
+    .dot{ color:#bdbdc7; padding:0 8px; }
+
+    .psold{
+      padding:12px 16px;
+      display:flex; justify-content:space-between; align-items:center;
+      border-top:1px solid #eee;
+      color:#444;
+    }
+    .free{ color:#111; font-weight:500; }
+
+    .addr-title{
+      display:flex; align-items:center; gap:10px;
+      padding:14px 16px;
+      font-size:20px; font-weight:500;
+      border-bottom:1px solid #eee;
+    }
+    .pin{ width:20px; height:20px; border-radius:50%; background:#e8f0ff; display:inline-flex; align-items:center; justify-content:center; color:#3867ff; font-weight:800; }
+    .addr{ padding:14px 16px; }
+    .addr .name{ font-size:22px; font-weight:500; margin:0 0 8px; color:#111; }
+    .addr .line{ margin:0; color:#333; line-height:1.5; }
+
+    /* Right column */
+    .right-title{ font-size:22px; font-weight:500; margin:0; padding:16px; border-bottom:1px solid #eee; }
+    .price-row{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px 16px;
+      font-size:16px;
+    }
+    .price-row .muted{
+      color:#6c6c75;
+      text-decoration: underline dotted;
+      text-underline-offset: 4px;
+    }
+    .divider{ height:1px; background:#eee; margin:0 16px; }
+    .order-total{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:16px;
+      font-size:20px; font-weight:500; color:#111;
+    }
+
+    .appnote{
+      margin:0 16px 10px;
+      background:#eaf1ff;
+      color:#2b5cff;
+      font-weight:500;
+      text-align:center;
+      padding:10px 12px;
+      border-radius:6px;
+      font-size:14px;
+    }
+    .btn{
+      width:calc(100% - 32px);
+      margin:0 16px 12px;
+      height:52px;
+      border-radius:8px;
+      font-size:18px;
+      font-weight:500;
+      cursor:pointer;
+    }
+    .btn-purple{
+      background:#9f2089;
+      color:#fff;
+      border:1px solid #9f2089;
+    }
+    .btn-outline{
+      background:#fff;
+      color:#9f2089;
+      border:1px solid #9f2089;
+    }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    /* Logo styles */
+    .ms-logo-wrap{ display:flex; align-items:center; }
+    .ms-logo-link{ text-decoration:none; display:flex; align-items:center; }
+    .ms-logo-img{ width:156px; height:36px; display:block; }
+    
+    /* ===== Download App Hover Dropdown (Meesho style) ===== */
+.dl-wrap{
+  position: relative;
+  display:flex;
+  align-items:center;
+}
+
+.dl-popup{
+  position:absolute;
+  top: 44px;             /* distance below header link */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  padding-top: 10px;     /* gap so hover doesn't break */
+  display:none;
+  z-index: 9999;
+}
+
+.dl-card{
+  background:#fff;
+  border:1px solid #e7e7ee;
+  border-radius:10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  text-align:center;
+}
+
+.dl-title{
+  font-size:16px;
+  font-weight:600;
+  color:#111;
+  margin-bottom:10px;
+}
+
+.dl-badge{
+  display:block;
+  margin:10px auto 0;
+  text-decoration:none;
+}
+
+.dl-badge img{
+  width: 200px;
+  height: auto;
+  display:block;
+  margin:0 auto;
+}
+
+/* ✅ show popup on hover */
+.dl-wrap:hover .dl-popup{
+  display:block;
+}
+
+/* small arrow */
+.dl-card::before{
+  content:"";
+  position:absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background:#fff;
+  border-left:1px solid #e7e7ee;
+  border-top:1px solid #e7e7ee;
+}
+* ===== PROFILE BUTTON ===== */
+/* ================= PROFILE DROPDOWN (MEESHO STYLE) ================= */
+.profile-container{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* button like your .top-link */
+.profile-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:14px;
+  font-weight:500;
+  color:#222;
+  text-decoration:none;
+  padding:6px 4px;
+  white-space:nowrap;
+  cursor: pointer;
+  position: relative;
+}
+.profile-btn:hover{ color:#9f2089; }
+
+.profile-btn i{
+  font-size:18px;
+}
+
+/* small underline like Meesho */
+.profile-underline{
+  position:absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 3px;
+  background:#9f2089;
+  display:none;
+}
+.profile-container:hover .profile-underline{
+  display:block;
+}
+
+/* dropdown popup */
+.profile-dropdown{
+  position:absolute;
+  top: 44px;
+  right: 0;
+  width: 250px;
+  background:#fff;
+  border:1px solid #e7e7ee;
+  border-radius:10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  padding: 12px 0;
+  display:none;
+  z-index:9999;
+}
+
+/* show dropdown on hover */
+.profile-container:hover .profile-dropdown{
+  display:block;
+}
+
+/* top section */
+.profile-top{
+  padding: 0 16px 12px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.profile-top.no-login{
+  display:block;
+}
+
+/* avatar */
+.profile-avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#f2f3f7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.profile-avatar i{
+  font-size:20px;
+  color:#6b7280;
+}
+
+/* user text */
+.profile-name{
+  font-size:14px;
+  font-weight:700;
+  color:#111;
+  line-height:1.2;
+}
+.profile-phone{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+.profile-sub{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:6px;
+}
+
+/* dropdown items */
+.profile-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 16px;
+  color:#111;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:500;
+}
+.profile-item i{
+  font-size:16px;
+  color:#616173;
+}
+
+/* hover effect */
+.profile-item:hover{
+  background:#f6f7fb;
+}
+
+/* make the logout button look like link row */
+.profile-item[type="submit"],
+.profile-dropdown button.profile-item{
+  width:100%;
+  background:transparent;
+  border:0;
+  text-align:left;
+  cursor:pointer;
+}
+
+  </style>
+</head>
+
+<body>
+
+<!-- ✅ HEADER (NO SEARCH, SAME LIKE MEESHO) -->
+<header class="header">
+  <div class="ms-logo-wrap">
+    <a href="{% url 'home' %}" class="ms-logo-link">
+      <img src="{% static 'images/meeshoLogo.png' %}" class="ms-logo-img" alt="Meesho" />
+    </a>
+  </div>
+
+  <div class="top-links">
+    <div class="dl-wrap">
+  <a href="#" class="top-link dl-trigger">
+    <span class="ico">📱</span>Download App
+  </a>
+
+  <!-- Hover Popup -->
+  <div class="dl-popup">
+    <div class="dl-card">
+      <div class="dl-title">Download From</div>
+      <a class="dl-badge" target="_blank" rel="noopener" href="https://app.meesho.com/2yoV?pid=pow_website&amp;c=pow&amp;af_dp=supply%3A%2F%2Fopen&amp;af_web_dp=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.meesho.supply">
+        <img src="{% static 'images/playstore-icon.jpg' %}" alt="play store">
+      </a>
+
+     <a class="dl-badge" target="_blank" rel="noopener" href="https://apps.apple.com/us/app/meesho-online-shopping/id1457958492">
+      <img src="{% static 'images/appstore-icon.jpg' %}" alt="App Store">
+      </a>
+    </div>
+  </div>
+</div>
+    <span class="sep"></span>
+
+    <a href="#" class="top-link">Become a Supplier</a>
+    <span class="sep"></span>
+
+    <a href="#" class="top-link">Newsroom</a>
+    <span class="sep"></span>
+
+   <!-- <a href="{% url 'profile' %}" class="top-link"><span class="ico">👤</span>Profile</a>
+ PROFILE DROPDOWN -->
+<!-- PROFILE DROPDOWN -->
+<div class="profile-container">
+
+  <!-- PROFILE BUTTON -->
+  <div class="profile-btn">
+    <i class="bi bi-person"></i>
+    <span>Profile</span>
+    <div class="profile-underline"></div>
+  </div>
+
+  <!-- DROPDOWN -->
+  <div class="profile-dropdown">
+
+    {% if user.is_authenticated %}
+      <div class="profile-top">
+        <div class="profile-avatar">
+          <i class="bi bi-person-fill"></i>
+        </div>
+        <div>
+          <div class="profile-name">Hello {{ user.username }}</div>
+          <div class="profile-phone">+91 {{ user.username }}</div>
+        </div>
+      </div>
+
+      <a href="{% url 'orders' %}" class="profile-item">
+        <i class="bi bi-bag"></i> My Orders
+      </a>
+
+      <form method="POST" action="{% url 'logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="profile-item"
+                style="border:0;background:transparent;width:100%;text-align:left;">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </form>
+
+    {% else %}
+      <div class="profile-top no-login">
+        <div class="profile-name">Hello Guest</div>
+        <div class="profile-sub">Please login to see orders</div>
+      </div>
+
+      <a href="{% url 'login' %}" class="profile-item">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+    {% endif %}
+
+  </div>
+</div>
+
+  </div>
+    <a href="/cart/" class="top-link"><span class="ico">🛒</span>Cart</a>
+  </div>
+</header>
+
+<!-- ✅ YOUR PAGE CONTENT -->
+<div class="wrap">
+  <div class="grid">
+    <!-- LEFT -->
+    <div>
+      <div class="success">
+        <div class="check">✓</div>
+        <div>
+          <h3>Thank you for shopping with us!</h3>
+          <div class="id">ID: #{{ order_id }}</div>
+        </div>
+      </div>
+
+      <div class="section-title">Product Details</div>
+
+      <!-- Product card -->
+      <div class="card">
+        <div class="phead">
+          <div class="truck">🚚</div>
+          <span>Estimated Delivery by {{ estimated_delivery }}</span>
+        </div>
+        {% for item in items %}
+        <div class="pbody">
+          <div class="prow">
+            {% if item.product.image %}
+              <img class="pimg" src="{{ item.product.image.url }}" alt="">
+            {% else %}
+              <div class="pimg"></div>
+            {% endif %}
+
+            <div>
+              <p class="ptitle">{{ item.product.title|truncatechars:46 }}</p>
+              <p class="pprice">₹{{ item.product.price }}</p>
+              <p class="psub">All issue easy returns</p>
+
+              <p class="pmeta">
+                Size: {{ item.size|default:"Free Size" }}
+                <span class="dot">•</span>
+                Qty: {{ item.qty }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="psold">
+          <div>Sold by: {{ item.product.seller_name|default:"Ambitions-Corp" }}</div>
+          <div class="free">Free Delivery</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Address -->
+      <div style="height:18px;"></div>
+      <div class="card">
+        <div class="addr-title">
+          <span class="pin">📍</span>
+          <span>Delivery Address</span>
+        </div>
+
+       <div class="addr">
+  {% if address %}
+    <p class="name">{{ address.name }}</p>
+
+    <p class="line">
+      {{ address.house }}, {{ address.area }},
+      {{ address.city }}, {{ address.state }} - {{ address.pincode }}
+    </p>
+
+    {% if address.phone %}
+      <p class="line" style="margin-top:8px;">Phone: {{ address.phone }}</p>
+    {% endif %}
+  {% else %}
+    <p class="name">{{ request.user.username }}</p>
+    <p class="line">No address found. Please add an address.</p>
+  {% endif %}
+</div>
+     
+<!-- Payment Mode -->
+<div style="height:18px;"></div>
+<div class="card">
+  <div class="addr-title">
+    <span class="pin">💳</span>
+    <span>Payment Mode</span>
+  </div>
+</div>
+
+
+  <div class="addr">
+    <p class="line" style="font-size:16px; font-weight:500; color:#111; margin:0;">
+      {{ payment_mode }}
+    </p>
+  </div>
+</div>
+    </div>
+    <!-- RIGHT -->
+    <div class="card">
+      <div class="right-title">Price Details ({{ total_items }} Items)</div>
+
+      <div class="price-row">
+        <span class="muted">Total Product Price</span>
+        <span>+ ₹{{ total_price|floatformat:0 }}</span>
+      </div>
+
+      <div class="price-row">
+  <span class="muted" style="color:#16a34a;">Total Discounts</span>
+  <span style="color:#16a34a;">- ₹{{ total_discount|floatformat:0 }}</span>
+</div>
+      <div class="divider"></div>
+
+      <div class="order-total">
+        <span>Order Total</span>
+        <span>₹{{ order_total|floatformat:0 }}</span>
+      </div>
+
+      <div class="appnote">Download the Meesho App to track your orders</div>
+
+      <button class="btn btn-purple" type="button" onclick="window.location.href='#'">
+        Download Meesho App
+      </button>
+
+      <button class="btn btn-outline" type="button" onclick="window.location.href='{% url 'home' %}'">
+        Continue Shopping
+      </button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

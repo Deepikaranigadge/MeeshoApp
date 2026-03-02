@@ -1,0 +1,683 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meesho Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background:#f5f6f8; font-family: Arial, sans-serif; }
+    .header { background:#fff; padding:15px 30px; display:flex; align-items:center; gap:40px; border-bottom:1px solid #eee; }
+    .meesho-logo h2 { color:#9f2089; font-weight:800; margin:0; }
+    .steps { display:flex; align-items:center; gap:14px; }
+    .step-dot{
+      width:22px; height:22px; border-radius:50%;
+      display:inline-flex; align-items:center; justify-content:center;
+      background:#4f86ff; color:#fff; font-size:12px; font-weight:700;
+    }
+    .step-line{ width:65px; height:2px; background:#4f86ff; }
+    .step-label{ font-size:12px; color:#111; margin-top:6px; text-align:center; }
+    .step-col{ display:flex; flex-direction:column; align-items:center; }
+
+    .page { padding:30px; }
+    .layout { display:flex; gap:30px; }
+    .left { width:65%; width:600px; margin: 0 auto;}
+    .right { width:35%; }
+
+    .card-box{
+      background:#fff; border:1px solid #dfe3ee; border-radius:10px;
+      padding:0; overflow:hidden;
+    }
+    .card-head{
+      padding:12px 14px; border-bottom:1px solid #dfe3ee; display:flex; align-items:center; gap:10px;
+      font-weight:600; color:#111;
+    }
+    .card-body{ padding:14px; }
+    .prod-row{ display:flex; gap:14px; }
+    .prod-img{ width:70px; height:70px; object-fit:cover; border-radius:10px; background:#f2f2f2; }
+    .prod-title{ font-weight:700; font-size:15px; margin:0; }
+    .prod-price{ font-weight:700; margin-top:4px; }
+    .muted{ color:#6b7280; font-size:14px; }
+
+    /* ✅ keep same edit look */
+    .edit-link{
+      color:#9f2089;
+      font-weight:700;
+      text-decoration:none;
+      background:transparent;
+      border:0;
+      padding:0;
+      cursor:pointer;
+    }
+    .edit-link:hover{ text-decoration:underline; }
+
+    .card-foot{
+      padding:12px 14px; border-top:1px solid #dfe3ee;
+      display:flex; justify-content:space-between; color:#4b5563;
+    }
+
+    .section-title{ font-weight:600; font-size:18px; margin:18px 0 10px; display:flex; align-items:center; gap:10px; }
+    .pin-dot{ width:12px; height:12px; border-radius:50%; background:#4f86ff; display:inline-block; }
+
+    .addr-box{
+      background:#fff; border:1px solid #dfe3ee; border-radius:10px;
+      padding:18px; position:relative;
+    }
+    .addr-name{ font-weight:600; font-size:20px; margin:0 0 6px; }
+    .addr-edit{ position:absolute; right:16px; top:16px; }
+
+    .price-box{
+       border-radius:10px;
+      padding:18px;
+    }
+    .price-title{ font-weight:600; font-size:18px; margin-bottom:12px; }
+    .price-row{ display:flex; justify-content:space-between; margin:10px 0; color:#374151; }
+    .price-divider{ border-top:1px solid #e5e7eb; margin:12px 0; }
+    .order-total{ font-weight:600; font-size:18px; }
+    .place-btn{
+      width:100%; border:0; background:#9f2089; color:#fff;
+      padding:12px; border-radius:8px; font-weight:700; font-size:16px;
+      margin-top:16px;
+    }
+
+    /* ✅ Drawer styles (same as your cart) */
+    #editDrawer{ width:380px; }
+    .drawer-title{ font-size:18px; font-weight:700; }
+    .continue-btn-drawer{
+      width:100%;
+      background:#9f2089;
+      color:white;
+      border:0;
+      padding:14px;
+      font-size:16px;
+      border-radius:10px;
+      font-weight:700;
+    }
+
+    .drawer-row{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    .drawer-field{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .drawer-label{
+      font-size:14px;
+      color:#111;
+      margin:0;
+      padding:0;
+    }
+    .drawer-select{
+      width:80px;
+      height:34px;
+      padding:2px 8px;
+      border-radius:8px;
+      font-size:14px;
+    }
+    .qty-box{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .qty-box button{
+      width:34px;
+      height:34px;
+      padding:0;
+      border-radius:8px;
+    }
+    .qty-num{
+      min-width:24px;
+      text-align:center;
+      font-weight:600;
+      font-size:14px;
+    }
+    .qty-limit-msg{
+      color:#d93025;
+      font-weight:600;
+      font-size:14px;
+      margin-top:6px;
+      display:none;
+    }
+
+    /* ============================================================
+       ✅✅✅ ADDED: Address Drawer styles (Meesho-like)
+       ============================================================ */
+    #addressDrawer{ width:420px; }
+
+    .addr-drawer-title{
+      font-size:16px;
+      font-weight:600;
+      letter-spacing:.3px;
+    }
+
+    .addr-search{
+      border:1px solid #e5e7eb;
+      border-radius:10px;
+      padding:10px 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      background:#fff;
+    }
+    .addr-search input{
+      border:0;
+      outline:0;
+      width:100%;
+      font-size:14px;
+    }
+
+    .add-new{
+      margin-top:14px;
+      font-weight:600;
+      color:#9f2089;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .addr-list{
+      margin-top:14px;
+      max-height: calc(100vh - 260px);
+      overflow:auto;
+      padding-right:6px;
+    }
+
+    .addr-card{
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:14px;
+      margin-bottom:12px;
+      background:#fff;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .addr-card.active{
+      background:#eef4ff;
+      border-color:#cfe0ff;
+    }
+
+    .addr-radio{
+      margin-top:4px;
+      width:18px;
+      height:18px;
+      accent-color:#9f2089;
+    }
+
+    .addr-name2{
+      font-weight:600;
+      font-size:18px;
+      margin:0 0 6px;
+    }
+    .addr-text2{
+      font-size:14px;
+      color:#374151;
+      margin:0 0 8px;
+      line-height:1.4;
+    }
+    .addr-phone2{
+      font-size:14px;
+      color:#111827;
+      margin:0;
+      font-weight:600;
+    }
+
+    .addr-edit2{
+      color:#9f2089;
+      font-weight:600;
+      text-decoration:none;
+      display:inline-block;
+      margin-top:10px;
+    }
+
+    .deliver-btn{
+      width:100%;
+      background:#9f2089;
+      color:#fff;
+      border:0;
+      padding:14px;
+      border-radius:10px;
+      font-weight:600;
+      font-size:16px;
+      margin-top:12px;
+    }
+
+    .drawer-footer{
+      position:sticky;
+      bottom:0;
+      background:#fff;
+      padding-top:10px;
+      padding-bottom:8px;
+    }
+  </style>
+</head>
+
+<body>
+
+{% include "partials/checkout_header.html" with active_step=4 %}
+
+<div class="page">
+  <div class="layout">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="section-title">Product Details</div>
+      {% for ci in cart_items %}
+      <div class="card-box mb-3">
+        <div class="card-head">
+          🚚 Estimated Delivery by {{ estimated_delivery }}
+        </div>
+
+        <div class="card-body">
+          <div class="prod-row">
+            <img class="prod-img" src="{{ ci.product.image.url }}" alt="{{ ci.product.title }}">
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <p class="prod-title">{{ ci.product.title|upper }}</p>
+
+                <button type="button"
+                        class="edit-link"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#editDrawer"
+                        data-item-id="{{ ci.id }}"
+                        data-title="{{ ci.product.title }}"
+                        data-image="{% if ci.product.image %}{{ ci.product.image.url }}{% endif %}"
+                        data-price="{{ ci.product.price }}"
+                        data-size="{{ ci.size|default:'Free Size' }}"
+                        data-qty="{{ ci.qty }}"
+                        data-sizes="{% for s in ci.product.sizes.all %}{{ s.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                  EDIT
+                </button>
+              </div>
+
+              <div class="mt-1">
+                <div style="font-weight:600; font-size:16px;">
+                  ₹{{ ci.product.price|floatformat:0 }}
+                </div>
+
+                {% if ci.product.mrp > ci.product.price %}
+                <div class="d-flex align-items-center gap-2">
+                  <span style="color:#9ca3af; text-decoration:line-through; font-size:14px;">
+                    ₹{{ ci.product.mrp|floatformat:0 }}
+                  </span>
+
+                  <span style="color:#16a34a; font-weight:700; font-size:13px;">
+                    {{ ci.product.calc_discount_percent }}% Off
+                  </span>
+                </div>
+                {% endif %}
+              </div>
+              <div class="muted mt-2">Size: {{ ci.size }} &nbsp; • &nbsp; Qty: {{ ci.qty }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-foot">
+          <div>Sold by: <b>{{ ci.product.seller_name|default:"SELLER" }}</b></div>
+          <div>Free Delivery</div>
+        </div>
+
+      </div>
+      {% endfor %}
+
+      <div class="section-title"><span class="pin-dot"></span> Delivery Address</div>
+
+      <div class="addr-box">
+        <div class="addr-edit">
+          <!-- ✅✅✅ CHANGED: open drawer instead of page -->
+          <button type="button" class="edit-link"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#addressDrawer">
+            EDIT
+          </button>
+        </div>
+
+        {% if address %}
+          <p class="addr-name">{{ address.name }}</p>
+          <div class="muted" style="font-size:15px;">
+            {{ address.house }}, {{ address.area }},
+            {{ address.city }}, {{ address.state }} - {{ address.pincode }}
+          </div>
+          <div class="muted mt-2" style="font-size:15px;">{{ address.phone }}</div>
+        {% else %}
+          <p class="muted m-0">No address selected. Please select an address.</p>
+        {% endif %}
+      </div>
+
+      <div class="section-title mt-4">Payment Mode</div>
+      <div class="muted">Cash on Delivery / Online (as your design)</div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="price-box">
+        <div class="price-title">Price Details ({{ total_items }} Items)</div>
+
+        <div class="price-row">
+          <span>Product Price</span>
+          <span>+ ₹{{ total_price|floatformat:0 }}</span>
+        </div>
+
+        <div class="price-row" style="color:#16a34a; font-weight:700;">
+          <span>Total Discounts</span>
+          <span>- ₹{{ total_discount|floatformat:0 }}</span>
+        </div>
+
+        <div class="price-divider"></div>
+
+        <div class="price-row order-total">
+          <span>Order Total</span>
+          <span>₹{{ order_total|floatformat:0 }}</span>
+        </div>
+
+        <div style="margin:12px 0; background:#e7f7ef; padding:10px; border-radius:6px; color:#16a34a; font-weight:700;">
+          🎉 Yay! Your total discount is ₹{{ total_discount|floatformat:0 }}
+        </div>
+
+        <form method="POST" action="{% url 'place_order' %}">
+          {% csrf_token %}
+          <button type="submit" class="place-btn">Place Order</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ✅✅✅ CHANGE #1: add this hidden url template line -->
+<span id="updateUrlTemplate" data-url="{% url 'update_cart_item' 999999 %}" style="display:none;"></span>
+
+<!-- ✅✅✅ ADD: EDIT DRAWER (same as cart) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editDrawer" aria-labelledby="editDrawerLabel">
+  <div class="offcanvas-header border-bottom">
+    <div class="drawer-title" id="editDrawerLabel">EDIT ITEM</div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <div class="d-flex gap-3">
+      <img id="edImg" src="" style="width:75px;height:75px;object-fit:cover;border-radius:10px;background:#f2f2f2;">
+      <div>
+        <div id="edTitle" class="fw-semibold" style="font-size:14px;"></div>
+        <div class="mt-1">
+          <span class="fw-bold" id="edPriceText">₹0</span>
+          <span class="text-muted ms-2" style="font-size:12px;">10% Off</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer-row mt-3">
+      <div class="drawer-field">
+        <span class="drawer-label">Size</span>
+        <select class="form-select form-select-sm drawer-select" id="edSize"></select>
+      </div>
+
+      <div class="drawer-field">
+        <span class="drawer-label">Qty</span>
+        <div class="qty-box">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="qtyMinus">−</button>
+          <span id="edQty" class="qty-num">1</span>
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="qtyPlus">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="qtyLimitMsg" class="qty-limit-msg">You can add upto 10 units in one order</div>
+
+    <hr class="my-4">
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="fw-semibold" style="font-size:18px;">Total Price</div>
+      <div class="fw-bold" id="edTotal" style="font-size:18px;">₹0</div>
+    </div>
+
+    <div class="mt-4">
+      <form method="POST" id="updateForm">
+        {% csrf_token %}
+        <input type="hidden" name="size" id="formSize">
+        <input type="hidden" name="qty" id="formQty">
+        <button type="submit" class="continue-btn-drawer">Continue</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     ✅✅✅ ADDED: ADDRESS DRAWER (Meesho same-to-same)
+     Needs: addresses in context + select_address URL
+     ============================================================ -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="addressDrawer" aria-labelledby="addressDrawerLabel">
+  <div class="offcanvas-header border-bottom">
+    <div class="addr-drawer-title" id="addressDrawerLabel">SELECT DELIVERY ADDRESS</div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <div class="addr-search">
+      <span style="font-size:18px; color:#6b7280;">🔍</span>
+      <input id="addrSearch" type="text" placeholder="Search Address by Name or Phone Number">
+    </div>
+
+    <div class="add-new" onclick="window.location.href='{% url 'add_address' %}?next={{ request.path }}'">
+      <span style="font-size:20px;">＋</span>
+      <span>ADD NEW ADDRESS</span>
+    </div>
+
+   <form method="POST" action="{% url 'select_address' 0 %}" id="addressSelectForm">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+
+      <div class="addr-list" id="addrList">
+        {% for a in addresses %}
+        <label class="addr-card {% if address and a.id == address.id %}active{% endif %}"
+               data-all="{{ a.name|lower }} {{ a.phone }} {{ a.house|lower }} {{ a.area|lower }} {{ a.city|lower }} {{ a.state|lower }} {{ a.pincode }}">
+          <input class="addr-radio" type="radio" name="address_id" value="{{ a.id }}"
+                 {% if address and a.id == address.id %}checked{% endif %}>
+
+          <div style="flex:1;">
+            <p class="addr-name2">{{ a.name }}</p>
+            <p class="addr-text2">
+              {{ a.house }}, {{ a.area }}, {{ a.city }}, {{ a.state }}, {{ a.pincode }}
+            </p>
+            <p class="addr-phone2">{{ a.phone }}</p>
+
+            <a class="addr-edit2" href="{% url 'edit_address' a.id %}?next={{ request.path }}">EDIT</a>
+          </div>
+        </label>
+        {% empty %}
+          <div class="muted">No saved addresses.</div>
+        {% endfor %}
+      </div>
+
+      <div class="drawer-footer">
+        <button type="submit" class="deliver-btn">Deliver to this Address</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const drawer = document.getElementById("editDrawer");
+
+  const edImg = document.getElementById("edImg");
+  const edTitle = document.getElementById("edTitle");
+  const edPriceText = document.getElementById("edPriceText");
+  const edSize = document.getElementById("edSize");
+  const edQty = document.getElementById("edQty");
+  const edTotal = document.getElementById("edTotal");
+
+  const qtyMinus = document.getElementById("qtyMinus");
+  const qtyPlus = document.getElementById("qtyPlus");
+
+  const updateForm = document.getElementById("updateForm");
+  const formSize = document.getElementById("formSize");
+  const formQty = document.getElementById("formQty");
+
+  const qtyLimitMsg = document.getElementById("qtyLimitMsg");
+  const MAX_QTY = 10;
+
+  let unitPrice = 0;
+
+  function setSizeOptions(sizesStr, selectedSize){
+    edSize.innerHTML = "";
+
+    let sizes = (sizesStr || "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    if(sizes.length === 0){
+      sizes = ["Free Size"];
+    }
+
+    sizes.forEach(size => {
+      const opt = document.createElement("option");
+      opt.value = size;
+      opt.textContent = size;
+      edSize.appendChild(opt);
+    });
+
+    edSize.value = sizes.includes(selectedSize) ? selectedSize : sizes[0];
+  }
+
+  function refreshTotal(){
+    const qty = parseInt(edQty.textContent || "1", 10);
+    const total = unitPrice * qty;
+    edTotal.textContent = "₹" + total.toFixed(0);
+
+    formSize.value = edSize.value;
+    formQty.value = qty;
+
+    if(qty >= MAX_QTY){
+      qtyLimitMsg.style.display = "block";
+      qtyPlus.disabled = true;
+      qtyPlus.classList.add("disabled");
+    } else {
+      qtyLimitMsg.style.display = "none";
+      qtyPlus.disabled = false;
+      qtyPlus.classList.remove("disabled");
+    }
+  }
+
+  drawer.addEventListener("show.bs.offcanvas", function (event) {
+    const btn = event.relatedTarget;
+    if(!btn) return;
+
+    const itemId = btn.getAttribute("data-item-id");
+    const title = btn.getAttribute("data-title") || "";
+    const image = btn.getAttribute("data-image") || "";
+    const price = btn.getAttribute("data-price") || "0";
+    const size = btn.getAttribute("data-size") || "Free Size";
+    const qty = btn.getAttribute("data-qty") || "1";
+    const sizesStr = btn.getAttribute("data-sizes") || "";
+
+    edTitle.textContent = title;
+
+    if(image){
+      edImg.src = image;
+      edImg.style.display = "block";
+    } else {
+      edImg.style.display = "none";
+    }
+
+    unitPrice = parseFloat(price) || 0;
+    edPriceText.textContent = "₹" + unitPrice;
+
+    setSizeOptions(sizesStr, size);
+
+    let q = parseInt(qty || "1", 10);
+    if(isNaN(q) || q < 1) q = 1;
+    if(q > MAX_QTY) q = MAX_QTY;
+    edQty.textContent = q;
+
+    /* ✅✅✅ CHANGE #2: set correct action using Django URL template */
+    if(!itemId){
+      console.log("Missing data-item-id on EDIT button");
+      return;
+    }
+    const urlTpl = document.getElementById("updateUrlTemplate").dataset.url;
+    updateForm.action = urlTpl.replace("999999", itemId);
+
+    refreshTotal();
+  });
+
+  edSize.addEventListener("change", refreshTotal);
+
+  qtyMinus.addEventListener("click", () => {
+    let q = parseInt(edQty.textContent || "1", 10);
+    q = Math.max(1, q - 1);
+    edQty.textContent = q;
+    refreshTotal();
+  });
+
+  qtyPlus.addEventListener("click", () => {
+    let q = parseInt(edQty.textContent || "1", 10);
+    q = Math.min(MAX_QTY, q + 1);
+    edQty.textContent = q;
+    refreshTotal();
+  });
+
+  /* ============================================================
+     ✅✅✅ ADDED: Address drawer search + active highlight
+     ============================================================ */
+  const addrSearch = document.getElementById("addrSearch");
+  const addrList = document.getElementById("addrList");
+
+  if (addrSearch && addrList) {
+    addrSearch.addEventListener("input", function () {
+      const q = (this.value || "").trim().toLowerCase();
+      const cards = addrList.querySelectorAll(".addr-card");
+      cards.forEach(card => {
+        const hay = (card.getAttribute("data-all") || "").toLowerCase();
+        card.style.display = hay.includes(q) ? "" : "none";
+      });
+    });
+
+    addrList.addEventListener("change", function (e) {
+      if (e.target && e.target.name === "address_id") {
+        addrList.querySelectorAll(".addr-card").forEach(c => c.classList.remove("active"));
+        const card = e.target.closest(".addr-card");
+        if (card) card.classList.add("active");
+      }
+    });
+  }
+
+  /* ============================================================
+   ✅✅✅ FIX: select_address needs <id> in URL
+   Replace /0/ with selected address id before submit
+   ============================================================ */
+const addressSelectForm = document.getElementById("addressSelectForm");
+
+if (addressSelectForm) {
+  addressSelectForm.addEventListener("submit", function (e) {
+    const checked = addressSelectForm.querySelector('input[name="address_id"]:checked');
+
+    if (!checked) {
+      e.preventDefault();
+      alert("Please select an address");
+      return;
+    }
+
+    // Replace trailing /0/ with /<selected_id>/
+    addressSelectForm.action = addressSelectForm.action.replace(/\/0\/?$/, "/" + checked.value + "/");
+  });
+}
+</script>
+
+</body>
+</html>

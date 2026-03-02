@@ -1,0 +1,840 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.title }} | Meesho Clone{% endblock %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #f7f7f7;
+  color: #242424;
+}
+
+/* PAGE WRAPPER */
+.page {
+  max-width: 1400px;
+  margin: 24px auto;
+  background: #fff;
+  padding: 24px;
+}
+
+/* ✅ BREADCRUMB (Meesho like) */
+.breadcrumb{
+  margin:14px 0 16px;
+  font-size:16px;
+  font-weight:700;
+  color:#9f2089;
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.breadcrumb a{ color:#9f2089; text-decoration:none; }
+.breadcrumb a:hover{ text-decoration:underline; }
+.breadcrumb .sep{ color:#c084fc; }
+
+/* ✅ MAIN LAYOUT */
+.product-layout{
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* LEFT IMAGE GALLERY */
+.image-section {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* thumbnails column */
+.thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thumb-btn {
+  width: 64px;
+  height: 76px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  padding: 0;
+  cursor: pointer;
+}
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.thumb-btn:hover { border-color: #9f2089; }
+.thumb-btn.active { border: 2px solid #9f2089; }
+
+/* main image box */
+.main-image {
+  border: 1px solid #eee;
+  width: 340px;
+  height: 472px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 4px;
+}
+.main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ACTION BUTTONS ROW */
+.action-row{
+  display: flex;
+  gap: 18px;
+  margin-top: 18px;
+  width: 100%;
+}
+.action-row form{ flex: 1; }
+
+.btn-outline-cart,
+.btn-filled-buy{
+  width: 100%;
+  height: 56px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid #9f2089;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-outline-cart{ background: #fff; color: #9f2089; }
+.btn-filled-buy{ background: #9f2089; color: #fff; }
+.btn-outline-cart:hover{ background: rgba(159,32,137,0.06); }
+.btn-filled-buy:hover{ background: #7c186c; }
+
+/* RIGHT DETAILS */
+.details { min-width: 520px; }
+
+.product-name {
+  font-size: 22px;
+  font-weight: 400;
+  color: #6b6b6b;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.rating { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.rating-badge {
+  background: #038d63;
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 16px;
+}
+.rating-text { font-size: 14px; color: #777; }
+
+.delivery {
+  display: inline-block;
+  background: #f1f1f1;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.divider { height: 1px; background: #eee; margin: 18px 0; }
+
+/* SIZE CARD (Meesho-like white) */
+.size-card{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:18px;
+  margin-top:6px;
+}
+.size-card-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:12px;
+  color:#111;
+}
+.size-error-text{
+  margin-top: 14px;
+  color: #d93025;
+  font-size: 16px;
+  font-weight: 800;
+  display: none;
+}
+.size-error-text.show{ display: block; }
+
+/* size buttons */
+.sizes { display: flex; gap: 12px; flex-wrap: wrap; }
+.size-btn{
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 2px solid #cfcfcf;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.size-btn.selected{
+  border-color: #9f2089;
+  color: #9f2089;
+}
+
+/* ✅ PRODUCT HIGHLIGHTS (Meesho top) */
+.ph-card{ margin-top:18px; }
+.ph-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.ph-head h3{ font-size:20px; font-weight:700; color:rgb(53, 53, 67); }
+.ph-head .copy{
+  color:#9f2089;
+  font-size:14px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+/* Highlights grid (label top, value below) */
+.ph-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 90px;
+}
+.ph-label{ font-size:14px; color:#6b7280; margin-bottom:6px; font-weight:550; }
+.ph-value{ font-size:16px; font-weight:500; color:#111; }
+
+/* ✅ Additional Details heading row like Meesho */
+.ph-acc{ margin-top: 16px; border-top:1px solid #eee; padding-top:12px; }
+.ph-acc-head{
+  width:100%;
+  border:none;
+  background:transparent;
+  padding: 10px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+}
+.ph-acc-title{
+  color: rgb(53, 53, 67);
+  font-style: normal;
+  font-weight: 550;
+  font-size: 18px;
+  line-height: 20px;
+  text-align: initial;
+  margin: 0px;
+  padding: 0px;
+}
+.ph-acc-icon{
+  font-size:18px;
+  font-weight:900;
+  color:#111;
+}
+
+/* ✅ Additional Details table style */
+.ad-table{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 140px;
+  row-gap: 16px;
+  padding-top: 14px;
+}
+.ad-key{
+  font-size:14px;
+  font-weight:500;
+  color:#6b7280;
+}
+
+/* ✅ FIXED: VALUE FONT SIZE SAME AS MEESHO */
+.ad-val{
+  font-size:16px;
+  font-weight:500;
+  color:#111;
+  line-height:1.2;
+}
+
+/* Similar products */
+.sim-title{
+  font-weight: 900;
+  font-size: 20px;
+  margin: 18px 0 10px;
+  color: #353543;
+}
+.similar-box{
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 12px;
+  margin-top: 10px;
+}
+.similar-row{
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.similar-row::-webkit-scrollbar{ height: 0px; }
+.sim-card{
+  flex: 0 0 auto;
+  width: 86px;
+  height: 118px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+.sim-card img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* OFFER BANNER */
+.offer-banner{ width: 100%; margin-bottom: 14px; }
+.offer-banner img{
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* DELIVERY CHECK CARD */
+.delivery-check-card{
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 20px;
+  background: #fff;
+}
+.delivery-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.pincode-row{
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+.pincode-row input{
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 6px 4px;
+}
+.pincode-row button{
+  border: none;
+  background: none;
+  color: #9f2089;
+  font-weight: 900;
+  cursor: pointer;
+}
+.delivery-result{ font-size: 14px; color: #444; }
+.delivery-line{ margin-top: 6px; }
+.login-msg{
+  margin-top: 10px;
+  color: #9f2089;
+  font-weight: 900;
+  cursor: pointer;
+  display: none;
+}
+
+/* ✅ Added: Meesho-like success/error bar */
+.pin-msg{
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  display: none;
+}
+.pin-msg.ok{
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+.pin-msg.err{
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* ✅ Responsive */
+@media (max-width: 1100px){
+  .product-layout{ grid-template-columns: 1fr; }
+  .details{ min-width: auto; }
+  .ph-grid{ grid-template-columns: 1fr 1fr; }
+  .ad-table{ column-gap: 60px; }
+}
+@media (max-width: 700px){
+  .ph-grid{ grid-template-columns: 1fr; }
+  .ad-table{ grid-template-columns: 1fr; }
+}
+button:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%);
+  background: #0b7a50;
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+  z-index: 9999;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.toast.show{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.toast-icon{
+  width: 44px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  color: #0b7a50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 200;
+}
+.toast-text{ font-size: 15px; }
+/* ✅ Price row like Meesho (₹565 ₹627 10% off onwards) */
+.price-line{
+  display:flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.price-line .sell{
+  font-size: 32px;
+  font-weight: 500;
+  color:#000;
+}
+
+.price-line .mrp{
+  font-size: 16px;
+  font-weight: 500;
+  color:#9ca3af;
+  text-decoration: line-through;
+}
+
+.price-line .off{
+  font-size: 16px;
+  font-weight: 600;
+  color:#16a34a;
+}
+
+.price-line .onwards{
+  font-size: 16px;
+  font-weight: 500;
+  color:#6b7280;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <div class="offer-banner">
+    <img src="{% static 'images/offer_35%.jpg' %}" alt="35% Off Banner">
+  </div>
+
+  <!-- ✅ BREADCRUMB -->
+<div class="breadcrumb">
+  {% for item in breadcrumbs %}
+    {% if item.url %}
+      <a href="{{ item.url }}">{{ item.name }}</a>
+    {% else %}
+      <span>{{ item.name }}</span>
+    {% endif %}
+
+    {% if not forloop.last %}
+      <span class="sep">/</span>
+    {% endif %}
+  {% endfor %}
+</div>
+
+  <div class="product-layout">
+
+    <!-- LEFT -->
+    <div>
+      <div class="image-section">
+
+        <div class="thumbnails">
+          <button type="button" class="thumb-btn active" data-full="{{ product.image.url }}">
+            <img src="{{ product.image.url }}" alt="{{ product.title }}">
+          </button>
+
+          {% for g in product.gallery.all %}
+            <button type="button" class="thumb-btn" data-full="{{ g.image.url }}">
+              <img src="{{ g.image.url }}" alt="{{ product.title }}">
+            </button>
+          {% endfor %}
+        </div>
+
+        <div class="main-image">
+          <img src="{{ product.image.url }}" id="mainImg" alt="{{ product.title }}">
+        </div>
+      </div>
+
+      <div class="action-row">
+        <form id="addToCartForm" method="POST" action="{% url 'add_to_cart' product.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="size" id="selectedSizeCart">
+          <button type="submit" class="btn-outline-cart" {% if product.stock == 0 %}disabled{% endif %}>
+            <span class="cart-icon">🛒</span> Add to Cart
+          </button>
+        </form>
+
+        <form id="buyNowForm" method="POST" action="{% url 'buy_now_review' product.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="size" id="selectedSizeBuy">
+          <button type="submit" class="btn-filled-buy" {% if product.stock == 0 %}disabled{% endif %}>
+            Buy Now
+          </button>
+        </form>
+      </div>
+
+      {% if similar_products %}
+        <h6 class="sim-title">{{ similar_products|length }} Similar Products</h6>
+        <div class="similar-box">
+          <div class="similar-row">
+            {% for sp in similar_products %}
+              <a class="sim-card" href="{% url 'product_detail' sp.id %}">
+                <img src="{{ sp.image.url }}" alt="{{ sp.title }}">
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT -->
+    <div class="details">
+      <h1 class="product-name">{{ product.title }}</h1>
+
+      <div class="price-line">
+  <span class="sell">₹{{ product.price|floatformat:0 }}</span>
+
+  {% if product.mrp > product.price %}
+    <span class="mrp">₹{{ product.mrp|floatformat:0 }}</span>
+    <span class="off">{{ product.calc_discount_percent }}% off</span>
+  {% endif %}
+</div>
+
+      {% if product.stock > 0 %}
+      {% else %}
+        <div style="margin:8px 0; font-weight:700; color:#d93025;">
+          Out of Stock
+        </div>
+      {% endif %}
+
+      <div class="rating">
+        <div class="rating-badge">{{ product.rating }} ★</div>
+        <div class="rating-text">{{ product.review_count }} Ratings, {{ product.comment_count }} Reviews</div>
+      </div>
+
+      <div class="delivery">Free Delivery</div>
+      <div class="divider"></div>
+
+      <!-- Size -->
+      <div class="size-card" id="sizeCard">
+        <div class="size-card-title">Select Size</div>
+
+        <div class="sizes" id="sizeButtons">
+          {% for size in product.sizes.all %}
+            <button type="button" class="size-btn" data-size="{{ size.name }}">
+              {{ size.name }}
+            </button>
+          {% endfor %}
+        </div>
+
+        <div id="sizeErrorTop" class="size-error-text">Please select a size</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ✅ Highlights + Additional Details -->
+      <div class="ph-card">
+
+        <div class="ph-head">
+          <h3>Product Highlights</h3>
+          <span class="copy">COPY</span>
+        </div>
+
+        {% if product_highlights %}
+          <div class="ph-grid">
+            {% for item in product_highlights %}
+              <div class="ph-item">
+                <div class="ph-label">{{ item.label }}</div>
+                <div class="ph-value">{{ item.value }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="color:#777;font-size:14px;">No highlights added.</div>
+        {% endif %}
+
+        <!-- ✅ Additional Details -->
+        <div class="ph-acc" id="phAcc">
+          <button type="button" class="ph-acc-head" id="phAccHead">
+            <span class="ph-acc-title">Additional Details</span>
+            <span class="ph-acc-icon" id="phAccIcon">⌃</span>
+          </button>
+
+          <div class="ph-acc-body" id="phAccBody">
+            {% if additional_details %}
+              <div class="ad-table">
+                {% for item in additional_details %}
+                  <div class="ad-key">{{ item.label }}</div>
+                  <div class="ad-val">{{ item.value }}</div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div style="color:#777;font-size:14px;">No additional details added.</div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CHECK DELIVERY -->
+      <div class="delivery-check-card">
+        <h3 class="delivery-title">Check Delivery Date</h3>
+
+        <div class="pincode-row">
+          <input type="text" id="pincodeInput" placeholder="Enter Delivery Pincode" maxlength="6">
+          <button type="button" id="checkPincodeBtn">CHECK</button>
+        </div>
+
+        <!-- ✅ Added message bar (green/red like Meesho) -->
+        <div id="pinMsg" class="pin-msg"></div>
+
+        <div id="deliveryResult" class="delivery-result">
+          <div class="delivery-line">🚚 <span id="deliveryText">Enter Pincode for Estimated Delivery Date</span></div>
+          <div class="delivery-line">📦 <span id="dispatchText">Dispatch in 1 day</span></div>
+        </div>
+
+        <div id="loginMsg" class="login-msg">
+          Login to see delivery details for your address
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast">
+  <span class="toast-icon">✓</span>
+  <span id="toastText" class="toast-text"></span>
+</div>
+
+<script>
+  // SIZE BUTTONS
+  const sizeButtons = document.querySelectorAll(".size-btn");
+  const errTop = document.getElementById("sizeErrorTop");
+  const sizeCart = document.getElementById("selectedSizeCart");
+  const sizeBuy = document.getElementById("selectedSizeBuy");
+
+  sizeButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      sizeButtons.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+
+      const size = btn.dataset.size;
+      sizeCart.value = size;
+      sizeBuy.value = size;
+
+      errTop.classList.remove("show");
+    });
+  });
+
+  function validateSize(){
+    if(!sizeCart.value){
+      errTop.classList.add("show");
+      return false;
+    }
+    return true;
+  }
+
+  document.getElementById("addToCartForm").onsubmit = validateSize;
+  document.getElementById("buyNowForm").onsubmit = validateSize;
+
+  // THUMBNAILS -> CHANGE MAIN IMAGE
+  const mainImg = document.getElementById("mainImg");
+  const thumbBtns = document.querySelectorAll(".thumb-btn");
+
+  thumbBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      thumbBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const full = btn.dataset.full;
+      if(full) mainImg.src = full;
+    });
+  });
+
+  // TOGGLE Additional Details
+  const phAccHead = document.getElementById("phAccHead");
+  const phAccBody = document.getElementById("phAccBody");
+  const phAccIcon = document.getElementById("phAccIcon");
+
+  if(phAccHead && phAccBody && phAccIcon){
+    phAccBody.style.display = "none";
+    phAccIcon.textContent = "⌄";
+
+    phAccHead.addEventListener("click", () => {
+      if(phAccBody.style.display === "none"){
+        phAccBody.style.display = "block";
+        phAccIcon.textContent = "⌃";
+      } else {
+        phAccBody.style.display = "none";
+        phAccIcon.textContent = "⌄";
+      }
+    });
+  }
+
+  // CSRF helper
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  // PINCODE (DB based)
+  const pincodeInput = document.getElementById("pincodeInput");
+  const checkBtn = document.getElementById("checkPincodeBtn");
+  const deliveryText = document.getElementById("deliveryText");
+  const dispatchText = document.getElementById("dispatchText");
+  const loginMsg = document.getElementById("loginMsg");
+  const pinMsg = document.getElementById("pinMsg");
+  const isLoggedIn = {{ request.user.is_authenticated|yesno:"true,false" }};
+
+  function showPinMsg(type, text){
+    pinMsg.style.display = "block";
+    pinMsg.className = "pin-msg " + type; // ok / err
+    pinMsg.textContent = text;
+  }
+
+  if (checkBtn) {
+    checkBtn.addEventListener("click", async () => {
+      const pin = pincodeInput.value.trim();
+
+      loginMsg.style.display = "none";
+      pinMsg.style.display = "none";
+
+      if(pin.length !== 6 || isNaN(pin)){
+        deliveryText.innerText = "Please enter valid 6-digit pincode";
+        dispatchText.innerText = "Dispatch in 1 day";
+        showPinMsg("err", "Enter a valid 6-digit pincode");
+        return;
+      }
+
+      if(!isLoggedIn){
+        loginMsg.style.display = "block";
+        deliveryText.innerText = "Login to see delivery date for your address";
+        dispatchText.innerText = "Dispatch in 1 day";
+        return;
+      }
+
+      deliveryText.innerText = "Checking availability...";
+      dispatchText.innerText = "Please wait...";
+
+      try {
+        const formData = new FormData();
+        formData.append("pincode", pin);
+
+        const res = await fetch("{% url 'check_delivery' product.id %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.ok) {
+          pinMsg.style.display = "none";
+          deliveryText.innerText = data.delivery_text || "Delivery available";
+          dispatchText.innerText = data.dispatch_text || "Dispatch in 2 days";
+
+          // ✅ Meesho popup toast
+          showToast(`'Discounts for ${data.area_name || pin}' applied`);
+        } else {
+          showPinMsg("err", data.message || `Delivery not available at pincode - ${pin}`);
+          deliveryText.innerText = data.message || `Delivery not available at pincode - ${pin}`;
+          dispatchText.innerText = "Dispatch in 2 days";
+        }
+      } catch (e) {
+        showPinMsg("err", "Something went wrong. Try again.");
+        deliveryText.innerText = "Something went wrong. Try again.";
+        dispatchText.innerText = "Dispatch in 2 days";
+      }
+    });
+  }
+
+  // TOAST
+  let toastTimer = null;
+
+  function showToast(message){
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+    if(!toast || !toastText) return;
+
+    toastText.textContent = message;
+
+    if(toastTimer) clearTimeout(toastTimer);
+
+    toast.classList.add("show");
+
+    toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+</script>
+
+
+{% endblock %}

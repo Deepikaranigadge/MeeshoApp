@@ -1,0 +1,477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meesho | Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Bootstrap (optional, for grid only) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --meesho:#9f2089;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --bg:#f5f6f8;
+      --card:#ffffff;
+      --light:#fafafa;
+      --green:#16a34a;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family: Arial, sans-serif;
+      color:var(--text);
+    }
+
+    /* HEADER */
+    .header{
+      background:#fff;
+      padding:15px 30px;
+      display:flex;
+      align-items:center;
+      gap:40px;
+      border-bottom:1px solid var(--border);
+    }
+    .meesho-logo{
+      text-decoration:none;
+      font-weight:500;
+      color:var(--meesho);
+      font-size:28px;
+      letter-spacing:.5px;
+      font-weight: bold;
+    }
+
+    .steps{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      color:#9ca3af;
+      font-size:14px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .step{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:600;
+    }
+    .dot{
+      width:20px;height:20px;border-radius:50%;
+      border:2px solid #cbd5e1;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:12px;
+      background:#fff;
+    }
+    .done .dot{
+      border-color:var(--meesho);
+      background:var(--meesho);
+      color:#fff;
+    }
+    .active .dot{
+      border-color:var(--meesho);
+      color:var(--meesho);
+    }
+    .active{ color:var(--text); }
+    .done{ color:var(--text); }
+
+    /* LAYOUT */
+    .wrap{
+      max-width:1000px;
+      margin:22px auto;
+      padding:0 18px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:22px;
+      align-items:start;
+    }
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:22px;
+    }
+
+    h2{
+      margin:0 0 14px 0;
+      font-size:24px;
+    }
+
+    /* PAYMENT METHOD CARD */
+    .pay-card{
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      margin-bottom:14px;
+      background:#fff;
+      cursor:pointer;
+      position:relative;
+    }
+
+    .pay-card.selected{
+      border:1px solid var(--meesho);
+      box-shadow: 0 0 0 1px rgba(159,32,137,.08);
+    }
+
+    .pay-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 16px;
+    }
+
+    .left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .price-stack{
+      min-width:74px;
+      font-weight:600;
+      font-size:22px;
+    }
+
+    .method-title{
+      font-size:22px;
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub-price{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      margin-top:2px;
+    }
+    .old{
+      color:#9ca3af;
+      text-decoration:line-through;
+      font-weight:700;
+      font-size:18px;
+      line-height:1.1;
+    }
+    .new{
+      color:var(--green);
+      font-weight:600;
+      font-size:22px;
+      line-height:1.1;
+    }
+    .save{
+      color:var(--green);
+      font-weight:600;
+      font-size:14px;
+      background:#e8f7ee;
+      display:inline-block;
+      width:max-content;
+      padding:3px 8px;
+      border-radius:6px;
+      margin-top:4px;
+    }
+
+    .right-radio{
+      width:20px;height:20px;border-radius:50%;
+      border:2px solid #cbd5e1;
+      display:flex;align-items:center;justify-content:center;
+      flex:0 0 auto;
+    }
+    .pay-card.selected .right-radio{
+      border-color:var(--meesho);
+      background:var(--meesho);
+      color:#fff;
+    }
+    .tick{
+      font-size:14px;
+      line-height:1;
+      display:none;
+    }
+    .pay-card.selected .tick{ display:block; }
+
+    .pay-foot{
+      border-top:1px solid var(--border);
+      padding:12px 16px;
+      background:#f8fafc;
+      color:#374151;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .shield{
+      width:18px;height:18px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:6px;
+      background:#e8f7ee;
+      color:var(--green);
+      font-weight:900;
+      font-size:12px;
+    }
+
+    /* RESELLING */
+    .resell{
+      margin-top:18px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#fff;
+      padding:18px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .resell h3{
+      margin:0;
+      font-size:22px;
+      font-weight:600;
+    }
+    .resell p{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:14px;
+      font-weight:600;
+    }
+    .toggle{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:999px;
+      display:flex;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .toggle button{
+      border:none;
+      background:transparent;
+      padding:10px 18px;
+      font-weight:600;
+      color:#374151;
+      cursor:pointer;
+    }
+    .toggle button.active{
+      background:#f7e6f4;
+      color:var(--meesho);
+      border-radius:999px;
+      margin:3px;
+    }
+
+    /* PRICE BOX RIGHT */
+    .price-title{
+      font-size:20px;
+      font-weight:500;
+      margin:0 0 14px 0;
+    }
+    .price-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 0;
+      color:#374151;
+      font-weight:300;
+    }
+    .divider{
+      height:1px;background:var(--border);margin:10px 0 12px;
+    }
+    .order-total{
+      display:flex;justify-content:space-between;align-items:center;
+      font-weight:300;
+      
+      padding:10px 0 12px;
+    }
+    .note{
+      background:#f3f4f6;
+      color:#374151;
+      text-align:center;
+      font-size:13px;
+      padding:10px;
+      border-radius:6px;
+      font-weight:500;
+      margin-bottom:10px;
+    }
+    .continue{
+      width:100%;
+      background:var(--meesho);
+      color:#fff;
+      border:none;
+      padding:14px 10px;
+      font-size:18px;
+      font-weight:500;
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    @media (max-width: 992px){
+      .wrap{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+{% include "partials/checkout_header.html" with active_step=3 %}
+
+<div class="wrap">
+
+  <!-- LEFT -->
+  <div class="panel">
+    <h2>Select Payment Method</h2>
+
+    <!-- COD -->
+    <div class="pay-card selected" id="cardCOD" data-method="cod">
+      <div class="pay-row">
+        <div class="left">
+          <div class="price-stack" id="codPrice">₹{{ order_total|floatformat:0 }}</div>
+          <div class="method-title">Cash on Delivery</div>
+        </div>
+        <div class="right-radio"><span class="tick">✓</span></div>
+      </div>
+    </div>
+
+    <!-- ONLINE -->
+    {# you can compute these in view and send #}
+    {% with online_total=order_total|floatformat:0 %}
+    <div class="pay-card" id="cardOnline" data-method="online">
+      <div class="pay-row">
+        <div class="left">
+          <div class="sub-price">
+           <div class="old" id="onlineOld">₹{{ total_price|floatformat:0 }}</div>
+
+<div class="new" id="onlineNew">
+  ₹{{ order_total|floatformat:0 }}
+</div>
+
+<div class="save" id="saveBox">
+  Save ₹{{ total_discount|floatformat:0 }}
+</div>
+          </div>
+
+          <div class="method-title" style="margin-left:16px;">Pay Online</div>
+        </div>
+        <div class="right-radio"><span class="tick">✓</span></div>
+      </div>
+
+      <div class="pay-foot">
+        <span class="shield">✓</span>
+        Extra discount with bank offers
+      </div>
+    </div>
+    {% endwith %}
+
+    <!-- Reselling -->
+    <div class="resell">
+      <div>
+        <h3>Reselling the order?</h3>
+        <p>Click on 'Yes' to add Final Price</p>
+      </div>
+
+      <div class="toggle" aria-label="Reselling toggle">
+        <button type="button" id="btnNo" class="active">No</button>
+        <button type="button" id="btnYes">Yes</button>
+      </div>
+    </div>
+
+    <!-- hidden form for submit -->
+    <form method="POST" action="{% url 'payment' %}" id="paymentForm" style="display:none;">
+
+      {% csrf_token %}
+      <input type="hidden" name="payment_method" id="paymentMethod" value="cod">
+      <input type="hidden" name="is_reselling" id="isReselling" value="0">
+    </form>
+
+  </div>
+
+  <!-- RIGHT -->
+<div class="panel">
+  <div class="price-title">Price Details ({{ total_items|default:0 }} Items)</div>
+
+  <div class="price-row">
+    <span>Product Price</span>
+    <span id="rightProductPrice">+ ₹{{ total_price|default:"0"|floatformat:0 }}</span>
+  </div>
+
+  <div class="price-row" style="color:var(--green); font-weight:700;">
+    <span>Total Discounts</span>
+    <span id="rightDiscount">- ₹{{ total_discount|default:"0"|floatformat:0 }}</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="order-total">
+    <span>Order Total</span>
+    <span id="rightOrderTotal">₹{{ order_total|default:"0"|floatformat:0 }}</span>
+  </div>
+
+  <!-- ✅ OFFER BOX (like Meesho) -->
+  <div id="offerBox"
+       style="margin-top:12px;background:#e7f7ef;padding:10px;border-radius:6px;color:var(--green);font-weight:700;">
+    🎉 Yay! Your total discount is ₹{{ total_discount|default:"0"|floatformat:0 }}
+  </div>
+
+  <div class="note" style="margin-top:12px;">
+    Clicking on 'Continue' will not deduct any money
+  </div>
+
+  <form method="GET" action="{% url 'summary' %}">
+    <button class="continue" id="continueBtn" type="submit">Continue</button>
+  </form>
+</div>
+<script>
+  const cardCOD = document.getElementById("cardCOD");
+  const cardOnline = document.getElementById("cardOnline");
+
+  const rightProductPrice = document.getElementById("rightProductPrice");
+  const rightDiscount = document.getElementById("rightDiscount");
+  const rightOrderTotal = document.getElementById("rightOrderTotal");
+  const offerBox = document.getElementById("offerBox");
+
+  // ✅ amounts (already integers)
+  const productPrice = parseInt(("{{ total_price|default:'0'|floatformat:0 }}").replace(/[^0-9]/g,'')) || 0;
+  const discountAmt  = parseInt(("{{ total_discount|default:'0'|floatformat:0 }}").replace(/[^0-9]/g,'')) || 0;
+
+  const codAmount    = parseInt(("{{ order_total|default:'0'|floatformat:0 }}").replace(/[^0-9]/g,'')) || 0;
+  const onlineAmount = parseInt(("{{ order_total|default:'0'|floatformat:0 }}").replace(/[^0-9]/g,'')) || codAmount;
+
+  function setSelected(method){
+    if(method === "cod"){
+      cardCOD.classList.add("selected");
+      cardOnline.classList.remove("selected");
+
+      rightProductPrice.textContent = "+ ₹" + productPrice;
+      rightDiscount.textContent     = "- ₹" + discountAmt;
+      rightOrderTotal.textContent   = "₹" + codAmount;
+
+    } else {
+      cardOnline.classList.add("selected");
+      cardCOD.classList.remove("selected");
+
+      rightProductPrice.textContent = "+ ₹" + productPrice;
+      rightDiscount.textContent     = "- ₹" + discountAmt;
+      rightOrderTotal.textContent   = "₹" + onlineAmount;
+    }
+
+    // ✅ hide offer box if discount is 0
+    if(discountAmt <= 0){
+      offerBox.style.display = "none";
+    }else{
+      offerBox.style.display = "block";
+      offerBox.textContent = "🎉 Yay! Your total discount is ₹" + discountAmt;
+    }
+  }
+
+  cardCOD.addEventListener("click", () => setSelected("cod"));
+  cardOnline.addEventListener("click", () => setSelected("online"));
+
+  // default selected = COD
+  setSelected("cod");
+</script>
+
+
+</body>
+</html>

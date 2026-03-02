@@ -1,0 +1,1952 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home | Meesho Clone{% endblock %}
+
+{% block content %}
+
+<style>
+  /* ✅ Full-bleed banner (no left/right gap even if base has container) */
+  .meesho-gold-banner{
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
+  .meesho-gold-bg{
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ✅ Cards position like Meesho (right side) */
+  .meesho-gold-cards{
+    position: absolute;
+    right: 95px;
+    top: 70px;
+    display: grid;
+    grid-template-columns: repeat(2, 150px);
+    gap: 28px 34px;
+  }
+
+  /* ✅ Card shape (arched top) */
+  .gold-card{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    text-decoration: none;
+
+    border: 2px solid rgba(255,255,255,.55);
+    border-top-left-radius: 90px;
+    border-top-right-radius: 90px;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+
+    background: transparent;
+  }
+
+  /* ✅ IMAGE area like Meesho (NO circle, NO white square showing) */
+  .gold-card-img{
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 86px;
+    height: 92px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .gold-card-img img{
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    object-position: center top;
+    transform: scale(1.25);
+  }
+
+  /* ✅ Text fixed bottom like Meesho */
+  .gold-card-text{
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #f4d28b;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  /* ✅ Mobile responsive */
+  @media (max-width: 768px){
+    .meesho-gold-bg{ height: 300px; }
+
+    .meesho-gold-cards{
+      right: 12px;
+      top: 40px;
+      grid-template-columns: repeat(2, 130px);
+      gap: 16px;
+    }
+
+    .gold-card{ width: 130px; height: 135px; }
+    .gold-card-img{ width: 72px; height: 78px; }
+  }
+
+  /* ================= ORIGINAL BRANDS (Meesho style) ================= */
+
+  .ob-wrap{
+    max-width: 1200px;
+    margin: 28px auto 10px;
+    padding: 0 14px;
+  }
+
+  .ob-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 16px;
+  }
+
+  .ob-title{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+
+  .ob-title h2{
+    margin:0;
+    font-size: 36px;
+    font-weight: 700;
+    color:#222;
+  }
+
+  .ob-badge{
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background:#efe7ff;
+    color:#5c2dbd;
+    font-weight:900;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 18px;
+  }
+
+  .ob-viewall{
+    text-decoration:none;
+    font-weight: 700;
+    color:#9f2089;
+    letter-spacing: .6px;
+    font-size: 16px;
+  }
+
+  .ob-viewall span{
+    font-size: 22px;
+    margin-left: 6px;
+  }
+
+  .ob-row{
+    display:flex;
+    gap: 22px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .ob-row::-webkit-scrollbar{ display:none; }
+
+  .ob-card{
+    flex: 0 0 auto;
+    width: 240px;
+    border-radius: 22px;
+    border: 2px solid #e6e6f0;
+    overflow: hidden;
+    text-decoration:none;
+    background:#fff;
+  }
+
+  .ob-img{
+    height: 260px;
+    background:#f2f1ff;
+    overflow: hidden;
+  }
+
+  .ob-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    padding: 0;
+    display: block;
+  }
+
+  .ob-label{
+    background:#5c2dbd;
+    color:#fff;
+    text-align:center;
+    padding: 16px 10px;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .ob-row-wrap{ position: relative; }
+
+  .ob-next{
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .ob-next:hover{ background: #f3f3f3; }
+
+  .ob-prev{
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .ob-prev:hover{ background: #f3f3f3; }
+
+  /* ================= BRAND LOGO STRIP ================= */
+  .brand-strip{
+    max-width: 1200px;
+    margin: 18px auto 0;
+    padding: 0 14px;
+  }
+
+  .brand-row-wrap{
+    position: relative;
+  }
+
+  .brand-row{
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 8px 6px;
+    scrollbar-width: none;
+  }
+  .brand-row::-webkit-scrollbar{ display:none; }
+
+  .brand-card{
+    flex: 0 0 auto;
+    width: 210px;
+    height: 92px;
+    background: white;
+    border-radius: 14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration: none;
+    border: 1px solid #eee;
+  }
+
+  .brand-card img{
+    max-width: 140px;
+    max-height: 60px;
+    object-fit: contain;
+  }
+
+  .brand-prev, .brand-next{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .brand-prev{ left: -12px; }
+  .brand-next{ right: -12px; }
+  .brand-prev:hover, .brand-next:hover{ background:#f3f3f3; }
+
+  /* ================= MEESHO APP BANNER ================= */
+  .meesho-app-banner{
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    position: relative;
+    margin-top: 30px;
+  }
+
+  .meesho-app-bg{
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .meesho-app-overlay{
+    position: absolute;
+    inset: 0;
+    max-width: 1400px;
+    margin: auto;
+  }
+
+  /* Download Button */
+  .meesho-app-btn{
+    position: absolute;
+    left: 12%;
+    bottom: 18%;
+    padding: 10px 26px;
+    background: #fff;
+    border: none;
+    border-radius: 10px;
+    color: #580a46;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  }
+
+  /* Cards */
+  .meesho-app-cards{
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 22px;
+  }
+
+  .app-card{
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .app-card img{
+    width: 150px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 22px;
+    border: 6px solid #ffd48a;
+    box-shadow: 0 8px 18px rgba(0,0,0,.2);
+  }
+
+  .app-card span{
+    margin-top: 10px;
+    background: #fff;
+    color: #580a46;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px){
+    .meesho-app-bg{ height: auto; }
+    .meesho-app-cards{
+      position: static;
+      transform: none;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .meesho-app-btn{
+      position: static;
+      margin: 16px auto;
+      display: block;
+    }
+  }
+
+  /* ================== PRODUCTS FOR YOU (MEESHO STYLE) ================== */
+  .pfy-wrap{
+    max-width: 1400px;
+    margin: 24px auto;
+    padding: 0 18px;
+  }
+
+  .pfy-title{
+    font-size: 44px;
+    font-weight: 500;
+    margin: 24px 0 18px;
+    color:#111;
+  }
+
+  .pfy-grid{
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .pfy-sidebar{
+    position: sticky;
+    top: 88px;
+  }
+
+  .pfy-sortbox{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 10px;
+    padding: 14px 14px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .pfy-sortlabel{
+    font-size: 16px;
+    color:#666;
+  }
+
+  .pfy-sortform{ margin:0; }
+  .pfy-sortselect{
+    border:0;
+    outline:0;
+    font-weight: 600;
+    font-size: 16px;
+    color:#222;
+    background: transparent;
+    cursor:pointer;
+  }
+
+  .pfy-filtercard{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .pfy-filterhead{
+    padding: 10px 6px 6px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap: 10px;
+  }
+
+  .pfy-filtertitle{
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-size: 20px;
+    color:#111;
+  }
+
+  .pfy-filtercount{
+    margin-top: 6px;
+    color:#6a6a7a;
+    font-size: 14px;
+  }
+
+  .pfy-divider{
+    height:1px;
+    background:#eee;
+    margin: 12px 0;
+  }
+
+  .pfy-section{ padding: 2px 6px; }
+
+  /* Accordion header */
+  .pfy-acc-head{
+    width:100%;
+    border:0;
+    background:transparent;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    font-weight: 500;
+    font-size: 20px;
+    color:#111;
+    padding: 14px 0;
+    cursor:pointer;
+  }
+
+  .pfy-acc-head .chev{
+    font-size: 16px;
+    color:#666;
+    transform: rotate(0deg);
+    transition: transform .15s ease;
+  }
+
+  .pfy-acc-head[data-open="true"] .chev{
+    transform: rotate(180deg);
+  }
+
+  .pfy-acc-body{
+    padding: 6px 0 14px;
+    display: none;
+  }
+
+  /* Pills (Gender etc) */
+  .pfy-pillrow{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pfy-pill{
+    border: 1px solid #dedee9;
+    background:#fff;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    color:#333;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .pfy-pill:hover{
+    border-color:#c7c7da;
+    background:#fafafe;
+  }
+
+  /* ✅ active pill */
+  .pfy-pill.is-active{
+    border-color:#9f2089;
+    box-shadow: 0 0 0 3px rgba(159,32,137,.12);
+    color:#9f2089;
+  }
+
+  /* Checkbox list (Fabric etc) */
+  .pfy-list{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pfy-check{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    font-size: 14px;
+    color:#333;
+  }
+
+  .pfy-check input{
+    width: 16px;
+    height: 16px;
+  }
+
+  /* RIGHT GRID */
+  .pfy-cards{
+    display:grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .pfy-card{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 12px;
+    overflow:hidden;
+  }
+
+  .pfy-imgwrap{
+    display:block;
+    background:#fff;
+    padding: 10px;
+  }
+
+  .pfy-imgwrap img{
+    width:100%;
+    height: 240px;
+    object-fit: contain;
+    display:block;
+  }
+
+  .pfy-info{
+    padding: 12px 14px 14px;
+  }
+
+  .pfy-name{
+    font-size: 16px;
+    color:#666;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 6px;
+  }
+
+  .pfy-price{
+    font-size: 26px;
+    font-weight: 500;
+    color:#111;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 1200px){
+    .pfy-cards{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 992px){
+    .pfy-grid{ grid-template-columns: 1fr; }
+    .pfy-sidebar{ position: static; }
+    .pfy-cards{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px){
+    .pfy-cards{ grid-template-columns: 1fr; }
+  }
+
+  /* ====== ✅ MEESHO COLOR + SIZE STYLE (search + chips + checkbox list) ====== */
+  .pfy-chipwrap{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pfy-chip{
+    border: 1px solid #dedee9;
+    background:#fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 500;
+    color:#3f3f53;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .pfy-chip:hover{
+    background:#fafafe;
+    border-color:#cfcfe2;
+  }
+
+  /* ✅ active chip */
+  .pfy-chip.is-active{
+    border-color:#9f2089;
+    box-shadow: 0 0 0 3px rgba(159,32,137,.12);
+    color:#9f2089;
+    font-weight: 700;
+  }
+
+  .pfy-search2{
+    width: 100%;
+    border: 1px solid #dedee9;
+    border-radius: 10px;
+    height: 44px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 0 12px;
+    margin: 4px 0 14px;
+  }
+
+  .pfy-search2 i{
+    color:#8b8ba3;
+    font-size: 18px;
+  }
+
+  .pfy-search2 input{
+    width:100%;
+    height:100%;
+    border:0;
+    outline:0;
+    font-size: 15px;
+    color:#222;
+  }
+
+  .pfy-search2 input::placeholder{
+    color:#8b8ba3;
+  }
+
+  .pfy-checklist{
+    display:flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 4px;
+  }
+
+  .pfy-checkrow{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    font-size: 16px;
+    color:#3f3f53;
+  }
+
+  .pfy-checkrow input{
+    width: 18px;
+    height: 18px;
+    accent-color: #9f2089;
+  }
+
+  /* ✅ Clear All button (small) */
+  .pfy-clear{
+    border: 0;
+    background: transparent;
+    color:#9f2089;
+    font-weight:800;
+    cursor:pointer;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+  .pfy-clear:hover{ background:#faf0f8; }
+
+  /* ✅ SHOW MORE behavior */
+  .chip-collapsed .pfy-chip{ display:none; }
+  .chip-collapsed .pfy-chip:nth-child(-n+12){ display:inline-flex; }
+
+  .pfy-showmore{
+    margin-top: 12px;
+    color:#9f2089;
+    font-weight:800;
+    cursor:pointer;
+    display:inline-block;
+    user-select:none;
+  }
+  .pfy-showmore:hover{ text-decoration: underline; }
+
+  /* ===== Left filter list like Meesho (accordion rows) ===== */
+.m-filter-row{
+  padding: 6px 6px;
+}
+
+.m-filter-btn{
+  width:100%;
+  background: transparent;
+  border:0;
+  padding: 14px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-weight: 500;
+  font-size: 20px;
+  color:#111;
+  cursor:pointer;
+}
+
+.m-filter-btn .arrow{
+  font-size: 18px;
+  color:#666;
+  transition: transform .15s ease;
+}
+
+.m-filter-btn[data-open="true"] .arrow{
+  transform: rotate(180deg);
+}
+
+.m-filter-body{
+  display:none;
+  padding: 6px 0 14px;
+}
+
+/* checkbox list inside */
+.m-list{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.m-check{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-size: 14px;
+  color:#333;
+}
+
+.m-check input{
+  width: 16px;
+  height: 16px;
+  accent-color:#9f2089;
+}
+
+/* rating pills */
+.m-rating{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.m-rating label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  color:#333;
+}
+.m-star{
+  color:#16a34a;
+  font-weight:800;
+}
+/* Price radio list (Meesho-like) */
+.pfy-radio-list{
+  display:flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 0 6px;
+}
+.pfy-radio{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  font-size: 16px;
+  color:#3f3f53;
+  cursor:pointer;
+  user-select:none;
+}
+.pfy-radio input{
+  width: 18px;
+  height: 18px;
+  accent-color: #9f2089;
+}
+/* ====== MEESHO EMPTY STATE (when no products) ====== */
+  .m-empty{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 16px;
+    min-height: 520px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
+
+  .m-empty-inner{
+    text-align:center;
+    max-width: 520px;
+    margin:auto;
+  }
+
+  .m-empty-icon{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background:#f3f4f6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin: 0 auto 18px;
+  }
+
+  .m-empty-icon svg{
+    width: 64px;
+    height: 64px;
+    opacity:.55;
+  }
+
+  .m-empty-text{
+    font-size: 18px;
+    color:#6b7280;
+    font-weight: 600;
+    margin: 6px 0 18px;
+  }
+
+  .m-empty-btn{
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+    background:#9f2089;
+    color:#fff;
+    border:0;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-weight: 800;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(159,32,137,.22);
+  }
+
+  .m-empty-btn:hover{
+    background:#8c1b77;
+  }
+
+  .m-empty-btn svg{
+    width: 18px;
+    height: 18px;
+  }
+  /* ✅ Meesho "Free Delivery" chip */
+.pfy-chipline{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin: 6px 0 10px;
+}
+
+.pfy-freedel{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background:#f4f6f8;
+  color:#4b5563;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* optional: rating badge like meesho */
+.pfy-ratingline{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top: 10px;
+}
+
+.pfy-ratingbadge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background:#16a34a;
+  color:#fff;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.pfy-ratingbadge .star{
+  font-size: 14px;
+  line-height: 1;
+}
+
+.pfy-reviews{
+  color:#6b7280;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.pfy-price-row{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom: 12px;
+}
+
+.pfy-mrp{
+  color:#9ca3af;
+  text-decoration: line-through;
+  font-weight:500;
+  font-size: 14px;
+}
+
+.pfy-off{
+  color:#16a34a;
+  font-weight:600;
+  font-size: 13px;
+}
+  .m-features-wrap{
+    margin: 18px auto 0;
+    padding: 0 14px;
+  }
+  .m-features{
+    background:#fff;
+    border:1px solid #f1d7ef;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 0;
+  }
+  .m-feature{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 0 22px;
+    font-weight: 500;
+    color:#111827;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .m-feature img{
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display:block;
+  }
+  .m-divider{
+    width:1px;
+    height: 18px;
+    background:#e9d3e6;
+  }
+
+  @media (max-width: 768px){
+    .m-features{
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 10px 0;
+    }
+    .m-divider{ display:none; }
+    .m-feature{ padding: 0 14px; font-size: 14px; }
+    .m-feature img{ width: 18px; height: 18px; }
+  }
+</style>
+
+<!-- ===== HERO CAROUSEL ===== -->
+<div id="carouselExample" class="carousel slide">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'images/banner_image.jpg' %}" class="d-block w-100 mx-auto" style="height:400px; object-fit:cover;" alt="Banner">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'images/1.jpg' %}" class="d-block w-100 mx-auto" style="height:400px; object-fit:cover;" alt="Banner">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'images/2.jpg' %}" class="d-block w-100 mx-auto" style="height:400px; object-fit:cover;" alt="Banner">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- ===== FEATURES ===== -->
+<section class="features text-center py-4">
+  <div class="m-features-wrap">
+  <div class="m-features">
+
+    <div class="m-feature">
+      <img src="{% static 'images/returns.png' %}" alt="Return">
+      <span>7 Days Easy Return</span>
+    </div>
+
+    <div class="m-divider"></div>
+
+    <div class="m-feature">
+      <img src="{% static 'images/cod.png' %}" alt="COD">
+      <span>Cash on Delivery</span>
+    </div>
+
+    <div class="m-divider"></div>
+
+    <div class="m-feature">
+      <img src="{% static 'images/lowest-price.png' %}" alt="Lowest Prices">
+      <span>Lowest Prices</span>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===== CATEGORY ICONS ===== -->
+<!-- ===== CATEGORY ICONS (WORKING LINKS) ===== -->
+<section class="container my-5">
+  <div class="row text-center g-4">
+
+    <div class="col-6 col-md-2">
+      <a href="{% url 'category_products' 'ethnic-wear' %}">
+        <img src="{% static 'images/Ethnic_Wear.jpg' %}" class="rounded-circle img-fluid" alt="Ethnic Wear">
+        <p>Ethnic Wear</p>
+      </a>
+    </div>
+
+    <div class="col-6 col-md-2">
+      <a href="{% url 'category_products' 'western-dresses' %}">
+        <img src="{% static 'images/Western.jpg' %}" class="rounded-circle img-fluid" alt="Western Dresses">
+        <p>Western Dresses</p>
+      </a>
+    </div>
+
+    <div class="col-6 col-md-2">
+      <a href="{% url 'category_products' 'menswear' %}">
+        <img src="{% static 'images/Menswear.jpg' %}" class="rounded-circle img-fluid" alt="Menswear">
+        <p>Menswear</p>
+      </a>
+    </div>
+
+    <div class="col-6 col-md-2">
+      <a href="{% url 'category_products' 'footwear' %}">
+        <img src="{% static 'images/Footwear.jpg' %}" class="rounded-circle img-fluid" alt="Footwear">
+        <p>Footwear</p>
+      </a>
+    </div>
+
+    <div class="col-6 col-md-2">
+      <a href="{% url 'category_products' 'home-decor' %}">
+        <img src="{% static 'images/Home_Decor.jpg' %}" class="rounded-circle img-fluid" alt="Home Decor">
+        <p>Home Decor</p>
+      </a>
+    </div>
+
+    <div class="col-6 col-md-2">
+      <a href="{% url 'category_products' 'beauty' %}">
+        <img src="{% static 'images/Beauty.jpg' %}" class="rounded-circle img-fluid" alt="Beauty">
+        <p>Beauty</p>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ✅ SECOND BANNER WITH 4 CARDS -->
+<div class="meesho-gold-banner">
+  <img src="{% static 'images/banner_image2.jpg' %}" class="meesho-gold-bg" alt="Second Banner">
+  <div class="meesho-gold-cards">
+  <a href="{% url 'category_products' 'lehengas' %}" class="gold-card">
+    <div class="gold-card-img"><img src="{% static 'images/Banner_2_01.jpg' %}" alt="Lehengas"></div>
+    <div class="gold-card-text">Lehengas</div>
+  </a>
+
+  <a href="{% url 'category_products' 'menswear' %}" class="gold-card">
+    <div class="gold-card-img"><img src="{% static 'images/Banner_2_02.jpg' %}" alt="Menwear"></div>
+    <div class="gold-card-text">Menwear</div>
+  </a>
+
+  <a href="{% url 'category_products' 'sarees' %}" class="gold-card">
+    <div class="gold-card-img"><img src="{% static 'images/Banner_2_03.jpg' %}" alt="Sarees"></div>
+    <div class="gold-card-text">Sarees</div>
+  </a>
+
+  <a href="{% url 'category_products' 'jewellery' %}" class="gold-card">
+    <div class="gold-card-img"><img src="{% static 'images/Banner_2_04.jpg' %}" alt="Jewellery"></div>
+    <div class="gold-card-text">Jewellery</div>
+  </a>
+
+</div>
+</div>
+
+<!-- ✅ ORIGINAL BRANDS SECTION -->
+<section class="ob-wrap">
+  <div class="ob-head">
+    <div class="ob-title">
+      <h2>Original Brands</h2>
+      <span class="ob-badge">✓</span>
+    </div>
+    <a href="#" class="ob-viewall">VIEW ALL <span>›</span></a>
+  </div>
+
+  <div class="ob-row" id="obRow">
+
+  <a href="{% url 'category_products' 'personal-care' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/personal_care.jpg' %}" alt="Personal Care"></div>
+    <div class="ob-label">Personal Care</div>
+  </a>
+
+  <a href="{% url 'category_products' 'electronics' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/electronics.jpg' %}" alt="Electronics"></div>
+    <div class="ob-label">Electronics</div>
+  </a>
+
+  <a href="{% url 'category_products' 'makeup' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/makeup.jpg' %}" alt="Makeup"></div>
+    <div class="ob-label">Makeup</div>
+  </a>
+
+  <a href="{% url 'category_products' 'smart-phones' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/smart_phone.jpg' %}" alt="Smart Phones"></div>
+    <div class="ob-label">Smart Phones</div>
+  </a>
+
+  <a href="{% url 'category_products' 'men-perfume' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/men_perfume.jpg' %}" alt="Men Perfume"></div>
+    <div class="ob-label">Men Perfume</div>
+  </a>
+
+  <a href="{% url 'category_products' 'bags' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/bags.jpg' %}" alt="Bags"></div>
+    <div class="ob-label">Bags</div>
+  </a>
+
+  <a href="{% url 'category_products' 'footwear' %}" class="ob-card">
+    <div class="ob-img"><img src="{% static 'images/footwears.jpg' %}" alt="Footwear"></div>
+    <div class="ob-label">Footwear</div>
+  </a>
+
+</div>
+
+    <button type="button" class="ob-prev" onclick="scrollBrandsLeft()">‹</button>
+    <button type="button" class="ob-next" onclick="scrollBrands()">›</button>
+  </div>
+</section>
+
+<!-- ✅ BRAND LOGO STRIP (Mi / Nivea etc) -->
+<section class="brand-strip">
+  <div class="brand-row-wrap">
+    <div class="brand-row" id="brandRow">
+      <a href="#" class="brand-card"><img src="{% static 'images/plom.jpg' %}" alt="Plum"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/nivea.jpg' %}" alt="Nivea"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/himalaya.jpg' %}" alt="Himalaya"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/mi.jpg' %}" alt="Mi"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/bata.jpg' %}" alt="Bata"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/wow.jpg' %}" alt="Wow"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/mamaearth.jpg' %}" alt="Mamaearth"></a>
+      <a href="#" class="brand-card"><img src="{% static 'images/wild_stone.jpg' %}" alt="Wild Stone"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ✅ MEESHO 35% OFF BANNER (App Download) -->
+<div class="meesho-app-banner">
+  <img src="{% static 'images/off_35_banner.jpg' %}" class="meesho-app-bg" alt="Up to 35% OFF">
+
+  <div class="meesho-app-overlay">
+    <button class="meesho-app-btn">Download Now</button>
+    
+   <div class="meesho-app-cards">
+
+  <a href="{% url 'category_products' 'dupatta-sets' %}" class="app-card">
+    <img src="{% static 'images/trending_now.jpg' %}" alt="Trending Now">
+    <span>Trending Now</span>
+  </a>
+
+  <a href="{% url 'category_products' 'budget-buys' %}" class="app-card">
+    <img src="{% static 'images/Budget_buys.jpg' %}" alt="Budget Buys">
+    <span>Budget Buys</span>
+  </a>
+
+  <a href="{% url 'category_products' 'top-rated-picks' %}" class="app-card">
+    <img src="{% static 'images/Rated_picks.jpg' %}" alt="Top Rated Picks">
+    <span>Top Rated Picks</span>
+  </a>
+
+  <a href="{% url 'category_products' 'daily-essentials' %}" class="app-card">
+    <img src="{% static 'images/daily_essentails.jpg' %}" alt="Daily Essentials">
+    <span>Daily Essentials</span>
+  </a>
+
+</div>
+  </div>
+</div>
+
+<!-- ================== PRODUCTS FOR YOU (MEESHO STYLE) ================== -->
+<div class="pfy-wrap">
+  <h1 class="pfy-title">Products For You</h1>
+
+  <div class="pfy-grid">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="pfy-sidebar">
+
+      <!-- Sort (✅ KEEP, but now it preserves other filters) -->
+      <div class="pfy-sortbox">
+        <span class="pfy-sortlabel">Sort by :</span>
+
+        <form method="GET" class="pfy-sortform" id="sortForm">
+          {% for c in request.GET.getlist %}
+          {% endfor %}
+          <select name="sort" class="pfy-sortselect" onchange="document.getElementById('sortForm').submit()">
+            <option value="relevance" {% if request.GET.sort == "relevance" or not request.GET.sort %}selected{% endif %}>Relevance</option>
+            <option value="price_low" {% if request.GET.sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if request.GET.sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
+          </select>
+        </form>
+      </div>
+
+      <!-- Filters -->
+      <div class="pfy-filtercard">
+
+        <form method="GET" id="filterForm" action="{% url 'home' %}">
+
+          {% if request.GET.sort %}
+            <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+          {% endif %}
+
+          <div class="pfy-filterhead">
+            <div>
+              <div class="pfy-filtertitle">FILTERS</div>
+              <div class="pfy-filtercount">{{ products|length }}+ Products</div>
+            </div>
+
+            <button type="button" class="pfy-clear" onclick="clearAllFilters()">Clear All</button>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Gender -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('genderBody', this)" data-open="true">
+              <span>Gender</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="genderBody" style="display:block;">
+              <div class="pfy-pillrow">
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Boys', this)">Boys</button>
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Girls', this)">Girls</button>
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Men', this)">Men</button>
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Women', this)">Women</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Color -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('colorBody', this)" data-open="false">
+              <span>Color</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="colorBody">
+
+              <div class="pfy-search2">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search" oninput="filterChips(this.value)">
+              </div>
+
+              <!-- ✅ UPDATED: chipWrap now collapsed by default + MANY MORE COLORS ADDED -->
+              <div class="pfy-chipwrap chip-collapsed" id="chipWrap">
+                <!-- existing -->
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Beige', this)">Beige</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Beige Men Jeans', this)">Beige Men Jeans</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Black', this)">Black</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Brown', this)">Brown</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Combo Of Different Color', this)">Combo Of Different Color</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Combo Of Maroon Shade', this)">Combo Of Maroon Shade</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Combo Of Red Shade', this)">Combo Of Red Shade</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Gold', this)">Gold</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Grey', this)">Grey</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Khaki', this)">Khaki</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Light Pink', this)">Light Pink</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Maroon', this)">Maroon</button>
+
+                <!-- ✅ more colors -->
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Red', this)">Red</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Blue', this)">Blue</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Green', this)">Green</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','White', this)">White</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Pink', this)">Pink</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Purple', this)">Purple</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Orange', this)">Orange</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Yellow', this)">Yellow</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Navy Blue', this)">Navy Blue</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Sky Blue', this)">Sky Blue</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Teal', this)">Teal</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Olive', this)">Olive</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Cream', this)">Cream</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Off White', this)">Off White</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Silver', this)">Silver</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Rose Gold', this)">Rose Gold</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Mustard', this)">Mustard</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Peach', this)">Peach</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Lavender', this)">Lavender</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Magenta', this)">Magenta</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Wine', this)">Wine</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Rust', this)">Rust</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Turquoise', this)">Turquoise</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Multicolor', this)">Multicolor</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Transparent', this)">Transparent</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Nude', this)">Nude</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Charcoal', this)">Charcoal</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Chocolate', this)">Chocolate</button>
+              </div>
+
+              <!-- ✅ Show More button (like Meesho) -->
+              <div class="pfy-showmore" id="showMoreBtn" onclick="toggleShowMore()">Show More</div>
+
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Fabric -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('fabricBody', this)" data-open="false">
+              <span>Fabric</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="fabricBody">
+              <div class="pfy-list">
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Cotton" onchange="document.getElementById('filterForm').submit()">
+                  Cotton
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Polyester" onchange="document.getElementById('filterForm').submit()">
+                  Polyester
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Rayon" onchange="document.getElementById('filterForm').submit()">
+                  Rayon
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Silk" onchange="document.getElementById('filterForm').submit()">
+                  Silk
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Wool" onchange="document.getElementById('filterForm').submit()">
+                  Wool
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Dial Shape -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('dialBody', this)" data-open="false">
+              <span>Dial Shape</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="dialBody">
+              <div class="pfy-list">
+                <label class="pfy-check">
+                  <input type="checkbox" name="dial_shape" value="Round" onchange="document.getElementById('filterForm').submit()">
+                  Round
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="dial_shape" value="Square" onchange="document.getElementById('filterForm').submit()">
+                  Square
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="dial_shape" value="Rectangle" onchange="document.getElementById('filterForm').submit()">
+                  Rectangle
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="dial_shape" value="Oval" onchange="document.getElementById('filterForm').submit()">
+                  Oval
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Size -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('sizeBody', this)" data-open="false">
+              <span>Size</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="sizeBody">
+              <div class="pfy-search2">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search">
+              </div>
+
+              <div class="pfy-checklist">
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="0-2 Years" onchange="document.getElementById('filterForm').submit()">
+                  0-2 Years
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="1.5 meters" onchange="document.getElementById('filterForm').submit()">
+                  1.5 meters
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="10" onchange="document.getElementById('filterForm').submit()">
+                  10
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="10-16 Years" onchange="document.getElementById('filterForm').submit()">
+                  10-16 Years
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="2-5 Years" onchange="document.getElementById('filterForm').submit()">
+                  2-5 Years
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="2.4" onchange="document.getElementById('filterForm').submit()">
+                  2.4
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="2.6" onchange="document.getElementById('filterForm').submit()">
+                  2.6
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="2.8" onchange="document.getElementById('filterForm').submit()">
+                  2.8
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="26" onchange="document.getElementById('filterForm').submit()">
+                  26
+                </label>
+              </div>
+            </div>
+          </div>
+
+         <div class="pfy-divider"></div>
+
+<!-- ✅ Price -->
+<div class="pfy-section">
+  <button class="pfy-acc-head" type="button" onclick="toggleAcc('priceBody', this)" data-open="false">
+    <span>Price</span>
+    <span class="chev">▾</span>
+  </button>
+
+  <div class="pfy-acc-body" id="priceBody" style="display:none;">
+    <div class="pfy-radio-list">
+
+      <label class="pfy-radio">
+        <input type="radio" name="price_range" value="0-199"
+          {% if request.GET.price_range == "0-199" %}checked{% endif %}
+          onchange="document.getElementById('filterForm').submit()">
+        Under ₹199
+      </label>
+
+      <label class="pfy-radio">
+        <input type="radio" name="price_range" value="200-399"
+          {% if request.GET.price_range == "200-399" %}checked{% endif %}
+          onchange="document.getElementById('filterForm').submit()">
+        ₹200 - ₹399
+      </label>
+
+      <label class="pfy-radio">
+        <input type="radio" name="price_range" value="400-699"
+          {% if request.GET.price_range == "400-699" %}checked{% endif %}
+          onchange="document.getElementById('filterForm').submit()">
+        ₹400 - ₹699
+      </label>
+
+      <label class="pfy-radio">
+        <input type="radio" name="price_range" value="700-999"
+          {% if request.GET.price_range == "700-999" %}checked{% endif %}
+          onchange="document.getElementById('filterForm').submit()">
+        ₹700 - ₹999
+      </label>
+
+      <label class="pfy-radio">
+        <input type="radio" name="price_range" value="1000+"
+          {% if request.GET.price_range == "1000+" %}checked{% endif %}
+          onchange="document.getElementById('filterForm').submit()">
+        ₹1000+
+      </label>
+
+    </div>
+  </div>
+</div>
+
+<div class="pfy-divider"></div>
+
+<!-- ✅ Rating -->
+<div class="m-filter-row">
+  <button type="button" class="m-filter-btn" onclick="toggleMeeshoAcc('mRatingBody', this)" data-open="false">
+    <span>Rating</span>
+    <span class="arrow">▾</span>
+  </button>
+
+  <div class="m-filter-body" id="mRatingBody">
+    <div class="m-rating">
+      <label>
+        <input type="radio" name="rating" value="4" onchange="document.getElementById('filterForm').submit()">
+        <span class="m-star">4★</span> & above
+      </label>
+      <label>
+        <input type="radio" name="rating" value="3" onchange="document.getElementById('filterForm').submit()">
+        <span class="m-star">3★</span> & above
+      </label>
+      <label>
+        <input type="radio" name="rating" value="2" onchange="document.getElementById('filterForm').submit()">
+        <span class="m-star">2★</span> & above
+      </label>
+      <label>
+        <input type="radio" name="rating" value="1" onchange="document.getElementById('filterForm').submit()">
+        <span class="m-star">1★</span> & above
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="pfy-divider"></div>
+
+<!-- ✅ Occasion -->
+<div class="m-filter-row">
+  <button type="button" class="m-filter-btn" onclick="toggleMeeshoAcc('mOccBody', this)" data-open="false">
+    <span>Occasion</span>
+    <span class="arrow">▾</span>
+  </button>
+
+  <div class="m-filter-body" id="mOccBody">
+    <div class="m-list">
+      <label class="m-check">
+        <input type="checkbox" name="occasion" value="Casual" onchange="document.getElementById('filterForm').submit()">
+        Casual
+      </label>
+      <label class="m-check">
+        <input type="checkbox" name="occasion" value="Party" onchange="document.getElementById('filterForm').submit()">
+        Party
+      </label>
+      <label class="m-check">
+        <input type="checkbox" name="occasion" value="Festive" onchange="document.getElementById('filterForm').submit()">
+        Festive
+      </label>
+      <label class="m-check">
+        <input type="checkbox" name="occasion" value="Wedding" onchange="document.getElementById('filterForm').submit()">
+        Wedding
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="pfy-divider"></div>
+
+<!-- ✅ combo of -->
+<div class="m-filter-row">
+  <button type="button" class="m-filter-btn" onclick="toggleMeeshoAcc('mComboBody', this)" data-open="false">
+    <span>Combo</span>
+    <span class="arrow">▾</span>
+  </button>
+
+  <div class="m-filter-body" id="mComboBody">
+    <div class="m-list">
+      <label class="m-check">
+        <input type="checkbox" name="combo_of" value="1" onchange="document.getElementById('filterForm').submit()">
+        Pack of 1
+      </label>
+      <label class="m-check">
+        <input type="checkbox" name="combo_of" value="2" onchange="document.getElementById('filterForm').submit()">
+         Pack of 2
+      </label>
+      <label class="m-check">
+        <input type="checkbox" name="combo_of" value="3" onchange="document.getElementById('filterForm').submit()">
+         Pack of 3
+      </label>
+      <label class="m-check">
+        <input type="checkbox" name="combo_of" value="4" onchange="document.getElementById('filterForm').submit()">
+         Pack of 4+
+      </label>
+    </div>
+  </div>
+</div>
+
+
+        </form>
+
+      </div>
+    </aside>
+
+    <!-- RIGHT PRODUCTS GRID -->
+   <section class="pfy-products">
+
+  {% if products %}
+    <!-- NORMAL PRODUCT GRID -->
+    <div class="pfy-cards">
+      {% for product in products %}
+      <div class="pfy-card">
+        <a href="{% url 'product_detail' product.id %}" class="pfy-imgwrap">
+          <img src="{{ product.image.url }}" alt="{{ product.title }}">
+        </a>
+
+        <div class="pfy-info">
+          <div class="pfy-name">{{ product.title }}</div>
+          <div class="pfy-price-row">
+  <span class="pfy-price">₹{{ product.price|floatformat:0 }}</span>
+
+  {% if product.mrp > product.price %}
+    <span class="pfy-mrp">₹{{ product.mrp|floatformat:0 }}</span>
+    <span class="pfy-off">{{ product.calc_discount_percent }}% off</span>
+  {% endif %}
+</div>
+
+
+            <!-- ✅ Free Delivery (Meesho style) -->
+               <div class="pfy-chipline">
+                 <span class="pfy-freedel">Free Delivery</span>
+               </div>
+
+               <!-- ✅ Optional rating row (remove if you don’t want) -->
+              <div class="pfy-ratingline">
+                 <span class="pfy-ratingbadge">
+                    <span>4.2</span> <span class="star">★</span>
+                 </span>
+                 <span class="pfy-reviews">Reviews</span>
+              </div>
+
+  
+</div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <!-- ✅ MEESHO EMPTY STATE (NO PRODUCTS MATCH FILTER) -->
+    <div class="m-empty">
+      <div class="m-empty-inner">
+        <div class="m-empty-icon">
+          <!-- warning icon -->
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 9v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 17h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M10.3 4.3c.8-1.4 2.6-1.4 3.4 0l8 13.9c.8 1.4-.2 3.2-1.7 3.2H4c-1.6 0-2.6-1.8-1.7-3.2l8-13.9Z"
+                  stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="m-empty-text">
+          We couldn't load the product feed. Please try again.
+        </div>
+
+        <button class="m-empty-btn" type="button" onclick="window.location.reload()">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M20 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Reload
+        </button>
+      </div>
+    </div>
+  {% endif %}
+
+</section>
+
+  </div>
+</div>
+
+<!-- ✅ JS scroll + ✅ FILTER WORKING JS -->
+<script>
+  function scrollBrands(){
+    const row = document.getElementById("obRow");
+    row.scrollBy({ left: 300, behavior: "smooth" });
+  }
+  function scrollBrandsLeft(){
+    const row = document.getElementById("obRow");
+    row.scrollBy({ left: -300, behavior: "smooth" });
+  }
+
+  function scrollBrandRight(){
+    document.getElementById("brandRow").scrollBy({ left: 300, behavior: "smooth" });
+  }
+  function scrollBrandLeft(){
+    document.getElementById("brandRow").scrollBy({ left: -300, behavior: "smooth" });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const row = document.getElementById("brandRow");
+    if(row){
+      const imgs = row.querySelectorAll("img");
+      let loaded = 0;
+
+      imgs.forEach(img => {
+        if (img.complete) {
+          loaded++;
+        } else {
+          img.onload = () => {
+            loaded++;
+            if (loaded === imgs.length) initLoop();
+          };
+        }
+      });
+
+      if (loaded === imgs.length) initLoop();
+
+      function initLoop(){
+        const items = Array.from(row.children);
+        if(items.length === 0) return;
+
+        items.forEach(el => row.appendChild(el.cloneNode(true)));
+
+        let originalWidth = 0;
+        items.forEach(el => originalWidth += el.offsetWidth);
+
+        const speed = 1.2;
+
+        function loop(){
+          row.scrollLeft += speed;
+          if(row.scrollLeft >= originalWidth){
+            row.scrollLeft -= originalWidth;
+          }
+          requestAnimationFrame(loop);
+        }
+
+        requestAnimationFrame(loop);
+      }
+    }
+
+    // ✅ Apply active states from URL + keep sort filters for sortForm
+    applyActiveFromURL();
+    syncSortFormWithURL();
+  });
+
+  function toggleAcc(bodyId, btn){
+    const body = document.getElementById(bodyId);
+    if(!body) return;
+
+    const isOpen = body.style.display === "block";
+    body.style.display = isOpen ? "none" : "block";
+
+    if(btn){
+      btn.setAttribute("data-open", isOpen ? "false" : "true");
+    }
+  }
+
+  function getParams(){
+    return new URLSearchParams(window.location.search);
+  }
+
+  function toggleMulti(param, value, btn){
+    const form = document.getElementById('filterForm');
+    if(!form) return;
+
+    const existing = form.querySelector(`input[type="hidden"][name="${param}"][value="${cssEscape(value)}"]`);
+    if(existing){
+      existing.remove();
+      if(btn) btn.classList.remove('is-active');
+    }else{
+      const i = document.createElement('input');
+      i.type = 'hidden';
+      i.name = param;
+      i.value = value;
+      form.appendChild(i);
+      if(btn) btn.classList.add('is-active');
+    }
+
+    form.submit();
+  }
+
+  function setSingle(param, value, btn){
+    const form = document.getElementById('filterForm');
+    if(!form) return;
+
+    form.querySelectorAll(`input[type="hidden"][name="${param}"]`).forEach(x => x.remove());
+
+    const i = document.createElement('input');
+    i.type = 'hidden';
+    i.name = param;
+    i.value = value;
+    form.appendChild(i);
+
+    document.querySelectorAll('.pfy-pill').forEach(p => p.classList.remove('is-active'));
+    if(btn) btn.classList.add('is-active');
+
+    form.submit();
+  }
+
+  function applyActiveFromURL(){
+    const params = getParams();
+
+    const colors = params.getAll('color');
+    if(colors.length){
+      colors.forEach(c => {
+        document.querySelectorAll('.pfy-chip').forEach(ch => {
+          if((ch.textContent || '').trim() === c){
+            ch.classList.add('is-active');
+          }
+        });
+        ensureHidden('color', c);
+      });
+    }
+
+    const gender = params.get('gender');
+    if(gender){
+      document.querySelectorAll('.pfy-pill').forEach(p => {
+        if((p.textContent || '').trim() === gender){
+          p.classList.add('is-active');
+        }
+      });
+      ensureHidden('gender', gender, true);
+    }
+
+    ['fabric','dial_shape','size'].forEach(name => {
+      const values = params.getAll(name);
+      if(values.length){
+        document.querySelectorAll(`input[type="checkbox"][name="${name}"]`).forEach(cb => {
+          if(values.includes(cb.value)){
+            cb.checked = true;
+          }
+        });
+      }
+    });
+  }
+
+  function ensureHidden(name, value, single=false){
+    const form = document.getElementById('filterForm');
+    if(!form) return;
+
+    if(single){
+      form.querySelectorAll(`input[type="hidden"][name="${name}"]`).forEach(x => x.remove());
+    }
+
+    const ex = form.querySelector(`input[type="hidden"][name="${name}"][value="${cssEscape(value)}"]`);
+    if(!ex){
+      const i = document.createElement('input');
+      i.type = 'hidden';
+      i.name = name;
+      i.value = value;
+      form.appendChild(i);
+    }
+  }
+
+  function syncSortFormWithURL(){
+    const sortForm = document.getElementById('sortForm');
+    if(!sortForm) return;
+
+    sortForm.querySelectorAll('input[type="hidden"]').forEach(x => x.remove());
+
+    const params = getParams();
+    params.forEach((v,k) => {
+      if(k === 'sort') return;
+      const i = document.createElement('input');
+      i.type = 'hidden';
+      i.name = k;
+      i.value = v;
+      sortForm.appendChild(i);
+    });
+  }
+
+  function clearAllFilters(){
+    const params = getParams();
+    const sort = params.get('sort');
+
+    if(sort){
+      window.location.href = window.location.pathname + '?sort=' + encodeURIComponent(sort);
+    }else{
+      window.location.href = window.location.pathname;
+    }
+  }
+
+  function filterChips(txt){
+    const q = (txt || '').toLowerCase().trim();
+    const wrap = document.getElementById('chipWrap');
+    if(!wrap) return;
+    wrap.querySelectorAll('.pfy-chip').forEach(btn => {
+      const label = (btn.textContent || '').toLowerCase();
+      btn.style.display = label.includes(q) ? 'inline-flex' : 'none';
+    });
+  }
+
+  function cssEscape(val){
+    if(window.CSS && CSS.escape) return CSS.escape(val);
+    return String(val).replace(/"/g, '\\"');
+  }
+
+  // ✅ Show More / Show Less (Color)
+  function toggleShowMore(){
+    const wrap = document.getElementById("chipWrap");
+    const btn = document.getElementById("showMoreBtn");
+    if(!wrap || !btn) return;
+
+    const collapsed = wrap.classList.contains("chip-collapsed");
+    if(collapsed){
+      wrap.classList.remove("chip-collapsed");
+      btn.textContent = "Show Less";
+    }else{
+      wrap.classList.add("chip-collapsed");
+      btn.textContent = "Show More";
+    }
+  }
+  
+
+  function toggleMeeshoAcc(bodyId, btn){
+  const body = document.getElementById(bodyId);
+  if(!body) return;
+
+  const isOpen = body.style.display === "block";
+  body.style.display = isOpen ? "none" : "block";
+
+  if(btn){
+    btn.setAttribute("data-open", isOpen ? "false" : "true");
+  }
+}
+
+</script>
+
+{% endblock %}

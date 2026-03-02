@@ -1,0 +1,11 @@
+{% if not request.session.user_phone %}
+<div class="profile-dropdown">
+  <h6>Hello User</h6>
+  <p>To access your Meesho account</p>
+  <a href="{% url 'signup' %}" class="btn btn-purple w-100">Sign Up</a>
+
+  <hr>
+  <a href="#">My Orders</a>
+  <a href="#">Delete Account</a>
+</div>
+{% endif %}

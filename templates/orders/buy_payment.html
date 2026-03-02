@@ -1,0 +1,534 @@
+{% load static %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:Roboto, sans-serif; background:#f5f6f8; color:#111827; }
+
+  :root{
+    --meesho:#9f2089;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --bg:#ffffff;
+    --green:#16a34a;
+    --green-bg:#d1fae5;
+    --green-text:#065f46;
+    --shadow: 0 10px 25px rgba(17,24,39,.06);
+  }
+
+  /* ====== TOP HEADER + STEPS (Meesho style) ====== */
+  .ck-header{
+    background:#fff;
+    border-bottom:1px solid #e7e7ee;
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  .ck-inner{
+    max-width:1200px;
+    margin:0 auto;
+    padding:12px 18px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+  }
+  .ck-logo{
+    display:flex; align-items:center; gap:10px;
+    font-weight:1000; letter-spacing:.2px;
+    color:var(--meesho); font-size:34px;
+    text-decoration:none;
+    user-select:none;
+  }
+
+  .steps{
+    flex:1;
+    display:flex;
+    justify-content:center;
+  }
+  .steps-wrap{
+    width:min(560px, 100%);
+    position:relative;
+    padding: 8px 0;
+  }
+  .steps-track{
+    position:absolute;
+    top:22px;
+    left:36px;
+    right:36px;
+    height:3px;
+    background:#d7dbe5;
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .steps-fill{
+    height:100%;
+    width:100%;
+    background: #5a7ffb;
+    transform:scaleX(0);
+    transform-origin:left;
+    transition: transform 700ms cubic-bezier(.2,.8,.2,1);
+  }
+  .steps-nodes{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    position:relative;
+    z-index:2;
+  }
+  .step{
+    width:120px;
+    text-align:center;
+    color:#9ca3af;
+    font-weight:800;
+    font-size:13px;
+  }
+  .step-dot{
+    width:26px; height:26px;
+    border-radius:999px;
+    border:2px solid #c9ceda;
+    background:#fff;
+    margin:0 auto 6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:1000;
+    color:#9ca3af;
+    transition: all .35s ease;
+  }
+  .step.active{ color:#111827; }
+  .step.active .step-dot{
+    border-color:#5a7ffb;
+    box-shadow: 0 0 0 6px rgba(90,127,251,.12);
+    color:#5a7ffb;
+    animation: pulse 1.5s infinite;
+  }
+  .step.done .step-dot{
+    border-color:#5a7ffb;
+    background:#5a7ffb;
+    color:#fff;
+    box-shadow:none;
+    animation:none;
+  }
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(90,127,251,.20); }
+    70%{ box-shadow: 0 0 0 10px rgba(90,127,251,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(90,127,251,0); }
+  }
+
+  /* ====== PAGE LAYOUT ====== */
+  .wrap{
+    max-width:1200px;
+    margin:18px auto 40px;
+    padding:0 18px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap: 22px;
+    align-items:start;
+    margin-top:18px;
+  }
+  .card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ====== PAYMENT METHODS ====== */
+  .pm-card{ padding:16px; }
+  .pm-title{
+    font-size:18px;
+    font-weight:1000;
+    margin-bottom:12px;
+  }
+
+  .pm-option{
+    border:1px solid #eef2f7;
+    border-radius:12px;
+    padding:14px;
+    display:flex;
+    gap:12px;
+    cursor:pointer;
+    transition: all .2s ease;
+    margin-bottom:12px;
+    background:#fff;
+  }
+  .pm-option:hover{ border-color:#dbe7ff; }
+  .pm-option input{ display:none; }
+
+  .pm-dot{
+    width:20px; height:20px;
+    border-radius:999px;
+    border:2px solid #c7cbd6;
+    margin-top:2px;
+    position:relative;
+    flex:0 0 auto;
+  }
+  .pm-option:has(input:checked){
+    border-color:#dbe7ff;
+    background:#eef4ff;
+  }
+  .pm-option:has(input:checked) .pm-dot{
+    border-color: var(--meesho);
+  }
+  .pm-option:has(input:checked) .pm-dot::after{
+    content:"";
+    position:absolute;
+    inset:4px;
+    background: var(--meesho);
+    border-radius:999px;
+  }
+
+  .pm-info{ flex:1; min-width:0; }
+  .pm-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:4px;
+  }
+  .pm-name{
+    font-weight:1000;
+    color:#111827;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .pm-badge{
+    font-size:12px;
+    font-weight:900;
+    color:#065f46;
+    background:#d1fae5;
+    padding:4px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .pm-desc{
+    color:#6b7280;
+    font-weight:700;
+    font-size:13px;
+    line-height:1.35;
+  }
+
+  .pm-body{
+    margin-top:10px;
+    display:none;
+  }
+  .pm-option:has(input:checked) .pm-body{ display:block; }
+
+  .field{
+    width:100%;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:12px 12px;
+    font-size:14px;
+    outline:none;
+    margin-top:10px;
+    background:#fff;
+  }
+  .row{
+    display:flex;
+    gap:10px;
+  }
+  .row .field{ flex:1; }
+
+  .hint{
+    margin-top:10px;
+    background:#f6f7fb;
+    border:1px dashed #d1d5db;
+    border-radius:10px;
+    padding:10px 12px;
+    color:#374151;
+    font-weight:700;
+    font-size:13px;
+  }
+
+  /* ====== RIGHT PRICE BOX ====== */
+  .pr-card{ padding:16px; }
+  .pr-title{
+    font-size:18px;
+    font-weight:1000;
+    margin-bottom:14px;
+  }
+  .pr-line{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #f1f2f4;
+    font-weight:800;
+    color:#111827;
+  }
+  .pr-total{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 0 6px;
+    font-size:18px;
+    font-weight:1000;
+  }
+
+  .safe-note{
+    margin-top:10px;
+    text-align:center;
+    color:#6b7280;
+    font-weight:800;
+    font-size:13px;
+  }
+
+  .pay-btn{
+    margin-top:12px;
+    width:100%;
+    height:48px;
+    border:none;
+    border-radius:10px;
+    background: var(--meesho);
+    color:#fff;
+    font-weight:1000;
+    font-size:16px;
+    cursor:pointer;
+    transition: filter .2s ease, transform .05s ease;
+  }
+  .pay-btn:hover{ filter:brightness(.96); }
+  .pay-btn:active{ transform: translateY(1px); }
+  .pay-btn[disabled]{ opacity:.55; cursor:not-allowed; }
+
+  .safe-banner{
+    margin-top:12px;
+    border:2px solid #111827;
+    border-radius:10px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .safe-banner img{ width:100%; display:block; }
+
+  @media (max-width: 980px){
+    .grid{ grid-template-columns:1fr; }
+    .steps{ display:none; } /* optional on mobile */
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% include "partials/review_header.html" with active_step=2 %}
+<div class="wrap">
+  <div class="grid">
+
+    <!-- LEFT: Payment Methods -->
+    <div class="card pm-card">
+      <div class="pm-title">Choose Payment Method</div>
+
+      <form method="POST" action="{% url 'place_order' %}" id="paymentForm">
+        {% csrf_token %}
+
+        <!-- ✅ COD -->
+        <label class="pm-option">
+          <input type="radio" name="payment_method" value="COD" checked>
+          <span class="pm-dot"></span>
+
+          <div class="pm-info">
+            <div class="pm-head">
+              <div class="pm-name">
+                <i class="bi bi-cash-coin"></i> Cash on Delivery
+              </div>
+              <span class="pm-badge">Recommended</span>
+            </div>
+
+            <div class="pm-desc">Pay in cash when your order arrives.</div>
+
+            <div class="pm-body">
+              <div class="hint">
+                ✅ No extra charges. Keep cash ready at delivery.
+              </div>
+            </div>
+          </div>
+        </label>
+
+        <!-- ✅ UPI -->
+        <label class="pm-option">
+          <input type="radio" name="payment_method" value="UPI">
+          <span class="pm-dot"></span>
+
+          <div class="pm-info">
+            <div class="pm-head">
+              <div class="pm-name">
+                <i class="bi bi-phone"></i> UPI
+              </div>
+            </div>
+
+            <div class="pm-desc">Pay using Google Pay / PhonePe / Paytm UPI.</div>
+
+            <div class="pm-body">
+              <input class="field" type="text" name="upi_id" id="upiId" placeholder="Enter UPI ID (example@upi)">
+              <div class="hint">Tip: Your UPI ID looks like <b>name@bank</b> or <b>number@upi</b>.</div>
+            </div>
+          </div>
+        </label>
+
+        <!-- ✅ CARD -->
+        <label class="pm-option">
+          <input type="radio" name="payment_method" value="CARD">
+          <span class="pm-dot"></span>
+
+          <div class="pm-info">
+            <div class="pm-head">
+              <div class="pm-name">
+                <i class="bi bi-credit-card-2-front"></i> Debit / Credit Card
+              </div>
+            </div>
+
+            <div class="pm-desc">Pay securely using your card.</div>
+
+            <div class="pm-body">
+              <input class="field" type="text" name="card_number" id="cardNumber" placeholder="Card Number (16 digits)" inputmode="numeric" maxlength="19">
+              <div class="row">
+                <input class="field" type="text" name="card_expiry" id="cardExpiry" placeholder="MM/YY" inputmode="numeric" maxlength="5">
+                <input class="field" type="password" name="card_cvv" id="cardCvv" placeholder="CVV" inputmode="numeric" maxlength="3">
+              </div>
+              <input class="field" type="text" name="card_name" id="cardName" placeholder="Name on Card">
+              <div class="hint">🔒 Your payment details are encrypted (demo UI).</div>
+            </div>
+          </div>
+        </label>
+
+        <!-- hidden submit (we trigger by right button) -->
+        <button type="submit" style="display:none" id="hiddenSubmit"></button>
+      </form>
+    </div>
+
+    <!-- RIGHT: Price Details -->
+    <!-- RIGHT: Price Details -->
+<div class="card pr-card">
+  <div class="pr-title">Price Details ({{ qty }} Item{{ qty|pluralize }})</div>
+
+  <div class="pr-line">
+    <span>Product Price</span>
+    <span>+ ₹{{ product_price_total|floatformat:0 }}</span>
+  </div>
+
+  <div class="pr-total">
+    <span>Order Total</span>
+    <span>₹{{ order_total|floatformat:0 }}</span>
+  </div>
+
+  <button class="pay-btn" type="button" id="payNowBtn">Place Order</button>
+
+  <div class="safe-banner">
+    <img src="{% static 'images/meesho_safe.jpg' %}" alt="Meesho Safe">
+  </div>
+</div>
+
+  </div>
+</div>
+
+<script>
+  (function(){
+    // ✅ Animate progress bar fill on load (Review -> Payment)
+    const fill = document.getElementById("stepsFill");
+    requestAnimationFrame(() => {
+      if(fill) fill.style.transform = "scaleX(1)";
+    });
+
+    const payBtn = document.getElementById("payNowBtn");
+    const form = document.getElementById("paymentForm");
+
+    const upiId = document.getElementById("upiId");
+    const cardNumber = document.getElementById("cardNumber");
+    const cardExpiry = document.getElementById("cardExpiry");
+    const cardCvv = document.getElementById("cardCvv");
+    const cardName = document.getElementById("cardName");
+
+    function selectedMethod(){
+      const el = form.querySelector('input[name="payment_method"]:checked');
+      return el ? el.value : "COD";
+    }
+
+    // Small helpers
+    function onlyDigits(s){ return (s || "").replace(/\D/g,""); }
+    function validUpi(v){ return /^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test((v||"").trim()); }
+    function validExpiry(v){
+      const m = (v||"").trim();
+      if(!/^\d{2}\/\d{2}$/.test(m)) return false;
+      const mm = parseInt(m.slice(0,2),10);
+      return mm >= 1 && mm <= 12;
+    }
+
+    // Format card number as 4-4-4-4
+    if(cardNumber){
+      cardNumber.addEventListener("input", () => {
+        const d = onlyDigits(cardNumber.value).slice(0,16);
+        cardNumber.value = d.replace(/(\d{4})(?=\d)/g, "$1 ");
+      });
+    }
+
+    // Format expiry MM/YY
+    if(cardExpiry){
+      cardExpiry.addEventListener("input", () => {
+        const d = onlyDigits(cardExpiry.value).slice(0,4);
+        if(d.length <= 2) cardExpiry.value = d;
+        else cardExpiry.value = d.slice(0,2) + "/" + d.slice(2);
+      });
+    }
+
+    function validate(){
+      const m = selectedMethod();
+
+      // COD always ok
+      if(m === "COD") return {ok:true};
+
+      if(m === "UPI"){
+        if(!validUpi(upiId.value)){
+          return {ok:false, msg:"Enter a valid UPI ID (example@upi)"};
+        }
+        return {ok:true};
+      }
+
+      if(m === "CARD"){
+        const num = onlyDigits(cardNumber.value);
+        if(num.length !== 16) return {ok:false, msg:"Enter 16-digit card number"};
+        if(!validExpiry(cardExpiry.value)) return {ok:false, msg:"Enter valid expiry MM/YY"};
+        if(onlyDigits(cardCvv.value).length !== 3) return {ok:false, msg:"Enter 3-digit CVV"};
+        if((cardName.value||"").trim().length < 2) return {ok:false, msg:"Enter name on card"};
+        return {ok:true};
+      }
+
+      return {ok:false, msg:"Select payment method"};
+    }
+
+    function syncPayButton(){
+      const v = validate();
+      payBtn.disabled = !v.ok;
+      payBtn.textContent = v.ok ? "Place Order" : "Place Order";
+    }
+
+    // Re-validate when switching methods or typing
+    form.querySelectorAll('input[name="payment_method"]').forEach(r => {
+      r.addEventListener("change", syncPayButton);
+    });
+    [upiId, cardNumber, cardExpiry, cardCvv, cardName].forEach(el => {
+      if(!el) return;
+      el.addEventListener("input", syncPayButton);
+    });
+
+    syncPayButton();
+
+    // Click Pay -> validate -> submit form
+    payBtn.addEventListener("click", () => {
+      const v = validate();
+      if(!v.ok){
+        alert(v.msg || "Please fill payment details");
+        return;
+      }
+      form.submit();
+    });
+  })();
+</script>
+
+{% endblock %}

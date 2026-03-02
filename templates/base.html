@@ -1,0 +1,982 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <title>{% block title %}Meesho Clone{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+<style>
+/* ===== CART UI (Meesho style) ===== */
+.cart-link {
+  text-decoration: none;
+  color: #353543;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  font-size: 14px;
+}
+
+.cart-icon-wrapper {
+  position: relative;
+  font-size: 26px;   /* icon size */
+  line-height: 1;
+}
+
+.cart-text {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Badge */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #9f2089;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+/* ===== GLOBAL ===== */
+body {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  overflow: visible !important;
+  padding: 0;
+}
+
+/* ===== PROFILE BUTTON ===== */
+/* ================= PROFILE CONTAINER ================= */
+.profile-container {
+  position: relative;
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ================= PROFILE BUTTON ================= */
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+  cursor: default;
+  position: relative;
+}
+
+.profile-btn i {
+  font-size: 18px;
+}
+
+/* underline */
+.profile-underline {
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #9f2089;
+  display: none;
+}
+
+.profile-container:hover .profile-underline {
+  display: block;
+}
+
+/* ================= DROPDOWN ================= */
+.profile-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 260px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  padding: 12px 0;
+  display: none;
+  z-index: 1000;
+}
+
+.profile-container:hover .profile-dropdown {
+  display: block;
+}
+
+/* ================= TOP SECTION ================= */
+.profile-top {
+  padding: 0 16px 14px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  gap: 12px;
+}
+
+.profile-top.no-login {
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* avatar (logged in) */
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar i {
+  font-size: 22px;
+  color: #666;
+}
+
+/* text */
+.profile-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+
+.profile-phone {
+  font-size: 13px;
+  color: #666;
+}
+
+.profile-sub {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+/* ================= SIGNUP BUTTON ================= */
+.signup-btn {
+  margin-top: 10px;
+  background: #9f2089;
+  color: #fff;
+  padding: 10px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.signup-btn:hover {
+  background: #8c1b77;
+}
+
+/* ================= MENU ITEMS ================= */
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #222;
+  text-decoration: none;
+}
+
+.profile-item i {
+  font-size: 16px;
+  color: #444;
+}
+
+.profile-item:hover {
+  background: #f7f7f7;
+}
+
+/* ===== NAVBAR LIST FIX (MAIN ISSUE) ===== */
+.navbar-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;     /* ❌ stop wrapping */
+  align-items: center;
+  gap: 28px;                        /* spacing like Meesho */
+  width: 100%;
+}
+
+.nav-item {
+  position: static;
+  white-space: nowrap;              /* keep text in one line */
+}
+
+.nav-link {
+  cursor: pointer;
+  padding: 12px 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #353543;
+}
+
+/* Hover underline like Meesho */
+.nav-item.mega:hover > .nav-link {
+  color: #9f2089;
+  border-bottom: 3px solid #9f2089;
+  font-weight: 600;
+}
+
+/* ===== MEGA MENU ===== */
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  display: none;
+  padding: 28px 80px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  z-index: 9999;
+}
+
+/* Popular menu (small) */
+.mega-menu.small {
+  width: 700px;
+}
+
+/* All other menus (full width like Meesho) */
+.mega-menu:not(.small) {
+  width: 100vw;
+}
+
+/* Show menu on hover */
+.nav-item.mega:hover .mega-menu {
+  display: flex;
+  gap: 60px;
+}
+
+/* ===== MEGA MENU CONTENT ===== */
+.mega-col {
+  min-width: 180px;
+}
+
+.mega-col h4 {
+  color: #9f2089;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.mega-col a {
+  display: block;
+  font-size: 14px;
+  color: #444;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.mega-col a:hover {
+  color: #9f2089;
+}
+/* BASIC RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.ms-header{
+  background: #fff;
+  border-bottom: 1px solid #e9e9ef;
+}
+
+.ms-header-inner{
+  height: 72px;                 /* close to original look */
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+}
+
+/* LOGO */
+.ms-logo-wrap{ display: flex; align-items: center; }
+.ms-logo-link{ text-decoration: none; display: flex; align-items: center; }
+.ms-logo-text{
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #8a1b7a;              /* meesho-like purple */
+  line-height: 1;
+}
+.ms-logo-img{ width: 156px; height: 36px; display: block; }
+
+/* SEARCH */
+.ms-search{
+  flex: 1;
+  max-width: 760px;
+  height: 44px;
+  border: 1px solid #d6d6e6;
+  
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.ms-search-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ms-search-input{
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.ms-search-input::placeholder{
+  color: #8b8ba3;
+}
+
+/* RIGHT MENU */
+.ms-actions{
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.ms-action{
+  text-decoration: none;
+  color: #222;
+  padding: 0 18px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* text items (2 lines) */
+.ms-action-text{
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* icon items (icon top, text bottom) */
+.ms-action-icon{
+  flex-direction: column;
+  gap: 6px;
+  min-width: 84px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ms-ico{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ms-action-label{
+  line-height: 1;
+}
+
+/* vertical divider like Meesho */
+.ms-divider{
+  border-left: 1px solid #e9e9ef;
+}
+
+/* RESPONSIVE (like their margin change around 1180px) */
+@media (max-width: 1180px){
+  .ms-header-inner{ padding: 0 16px; }
+  .ms-action{ padding: 0 12px; }
+  .ms-logo-text{ font-size: 38px; }
+}
+
+</style>
+
+<!-- ===== HEADER ===== -->
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/meesho_header.css' %}">
+
+<header class="ms-header">
+  <div class="ms-header-inner">
+
+    <!-- LOGO -->
+    <div class="ms-logo-wrap">
+      <a href="{% url 'home' %}" class="ms-logo-link">
+        <!-- If you have logo image -->
+         <img src="{% static 'images/meeshoLogo.png'%}" class="ms-logo-img" alt="Meesho" />
+
+        <!-- If you have TEXT logo 
+        <span class="ms-logo-text">meesho</span>-->
+      </a>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="ms-search">
+      <span class="ms-search-icon" aria-hidden="true">
+        <!-- search svg -->
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M19.77 18.67L16.01 14.91C17.33 13.33 18.13 11.3 18.13 9.08C18.13 4.06 14.07 0 9.06 0C4.06 0 0 4.06 0 9.08C0 14.1 4.06 18.16 9.06 18.16C11.29 18.16 13.33 17.35 14.91 16.01L18.67 19.77C18.97 20.07 19.47 20.07 19.77 19.77C20.08 19.47 20.08 18.97 19.77 18.67ZM9.06 16.6C4.92 16.6 1.55 13.23 1.55 9.08C1.55 4.93 4.92 1.56 9.06 1.56C13.2 1.56 16.57 4.93 16.57 9.08C16.57 13.23 13.2 16.6 9.06 16.6Z"
+                fill="#8B8BA3"/>
+        </svg>
+      </span>
+
+      <form action="{% url 'search_products' %}" method="get" class="ms-search">
+      <input
+        class="ms-search-input"
+        type="text"
+        name="q" 
+        placeholder="Try Saree, Kurti or Search by Product Code"
+        required
+       />
+      </form>
+      
+    </div>
+
+    <!-- RIGHT MENU -->
+    <nav class="ms-actions">
+
+      <a href="#" class="ms-action ms-action-text">
+        <span>Become</span>
+        <span>a Supplier</span>
+      </a>
+
+      <a href="#" class="ms-action ms-action-text ms-divider">
+        <span>Investor</span>
+        <span>Relations</span>
+      </a>
+
+<!-- PROFILE DROPDOWN -->
+<div class="profile-container" >
+
+  <!-- PROFILE BUTTON -->
+  <div class="profile-btn">
+    <i class="bi bi-person"></i>
+    <span>Profile</span>
+    <div class="profile-underline"></div>
+  </div>
+
+  {% if user.is_authenticated %}
+
+  <!-- ================= LOGGED IN ================= -->
+  <div class="profile-dropdown">
+
+    <div class="profile-top">
+      <div class="profile-avatar">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <div>
+        <div class="profile-name">Hello User</div>
+        <div class="profile-phone">
+          +91 {{ user.username }}
+        </div>
+      </div>
+    </div>
+
+    <a href="{% url 'orders' %}" class="profile-item">
+      <i class="bi bi-bag"></i> My Orders
+    </a>
+
+    <a href="#" class="profile-item">
+      <i class="bi bi-trash"></i> Delete Account
+    </a>
+
+    <form method="POST" action="{% url 'logout' %}" style="margin:0;">
+  {% csrf_token %}
+  <button type="submit" class="profile-item" style="border:0;background:transparent;width:100%;text-align:left;">
+    <i class="bi bi-box-arrow-right"></i> Logout
+  </button>
+</form>
+
+  </div>
+
+  {% else %}
+
+  <!-- ================= NOT LOGGED IN ================= -->
+  <div class="profile-dropdown">
+
+    <div class="profile-top no-login">
+      <div class="profile-name">Hello User</div>
+      <div class="profile-sub">
+        To access your Meesho account
+      </div>
+
+      <a href="{% url 'signup' %}" class="signup-btn">
+        Sign Up
+      </a>
+    </div>
+
+    <a href="#" class="profile-item">
+      <i class="bi bi-bag"></i> My Orders
+    </a>
+
+    <a href="#" class="profile-item">
+      <i class="bi bi-trash"></i> Delete Account
+    </a>
+
+  </div>
+
+  {% endif %}
+
+</div>
+<!-- CART -->
+<a href="{% url 'cart_page' %}" class="cart-link position-relative text-decoration-none">
+  <i class="bi bi-cart4" style="font-size:22px;"></i>
+  <span style="margin-left:6px;">Cart</span>
+
+  <span id="cartBadge"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+        style="background:#d93025; color:#fff; font-size:12px; padding:3px 6px;
+               {% if cart_count|default:0 == 0 %}display:none;{% endif %}">
+    {{ cart_count|default:0 }}
+  </span>
+</a>
+
+    </div>
+  </div>
+</header>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
+  <div class="container-fluid position-static px-5">
+    <ul class="navbar-nav">
+      <!-- POPULAR -->
+      <li class="nav-item mega">
+        <span class="nav-link active-link">Popular</span>
+        <div class="mega-menu">
+          <div class="mega-col">
+            <h4>Featured</h4>
+              <a href="#">Smartphones</a>
+              <a href="#">Top Brands</a>
+              <a href="#">Shimla Apples</a>
+          </div>
+          <div class="mega-col">
+            <h4>All Popular</h4>
+              <a href="#">Jewellery</a>
+              <a href="#">Men Fashion</a>
+              <a href="#">Kids</a>
+              <a href="#">Footwear</a>
+              <a href="#">Beauty & Personal Care</a>
+              <a href="#">Grocery</a>
+              <a href="#">Electronics</a>
+              <a href="#">Innerwear & Nightwear</a>
+              <a href="#">Kitchen & Appliances</a>
+              <a href="#">Bags & Luggage</a>
+              <a href="#">Healthcare</a>
+              <a href="#">Stationery & Office Supplies</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Kurti,Saree & Lehenga -->
+       <li class="nav-item mega">
+        <span class="nav-link">Kurti,Saree & Lehenga</span>
+        <div class="mega-menu">
+          <div class="mega-col">
+            <h4>Saree</h4>
+             <a href="{% url 'saree_products' %}">All Sarees</a>
+              <a href="#">Georgette Sarees</a>
+              <a href="#">Net Sarees</a>
+              <a href="#">Cotton Sarees</a>
+              <a href="#">Silk Sarees</a>
+              <a href="#">Bridal Sarees</a>
+          </div>
+          <div class="mega-col">
+             <h4>Kurtis</h4>
+               <a href="{% url 'kurti_products' %}">All Kurtis</a>
+                <a href="#">Anarkali Kurtis</a>
+                <a href="#">Rayon Kurtis</a>
+                <a href="#">Cotton Kurtis</a>
+                <a href="#">Straight Kurtis</a>
+          </div>
+          <div class="mega-col">
+             <h4>Kurta Sets</h4>
+               <a href="#">All Kurta Sets</a>
+               <a href="#">Kurta Palazzo Sets</a>
+               <a href="#">Kurta Pant Sets</a>
+               <a href="#">Sharara Sets</a>
+               <a href="#">Cotton Kurta Sets</a>
+          </div>
+
+          <div class="mega-col">
+            <h4>Lehengas</h4>
+               <a href="#">All Lehengas</a>
+               <a href="#">Shoppers Favourite</a>
+               <a href="#">Tranding Lehengas</a>               
+          </div>
+
+           <div class="mega-col">
+             <h4>Blouses</h4>
+               <a href="#">All Blouses</a>
+               <a href="#">Shoppers Favourite</a>
+               <a href="#">Trending Blouses</a>
+          </div>
+
+          <div class="mega-col">
+             <h4>Gowns</h4>
+               <a href="#">All Gowns</a>
+               <a href="#">Shoppers Favourite</a>
+               <a href="#">Trending Gowns</a>             
+           </div>
+        </div>
+      </li>
+
+      <!-- WOMEN WESTERN -->
+      <li class="nav-item mega">
+        <span class="nav-link">Women Western</span>
+        <div class="mega-menu">
+          <div class="mega-col">
+            <h4>Topwear</h4>
+              <a href="#">All Topwear</a>
+              <a href="#">Tops & Tunics</a>
+              <a href="#">Dresses</a>
+              <a href="#">T-shirts</a>
+              <a href="#">Gowns</a>
+          </div>
+          <div class="mega-col">
+             <h4>Bottom Wear</h4>
+                <a href="#">Jeans & Jeggings</a>
+                <a href="#">Palazzos</a>
+                <a href="#">Trousers & Pants</a>
+                <a href="#">Leggings</a>
+                <a href="#">Shorts & Skirts</a>
+          </div>
+          <div class="mega-col">
+             <h4>Winterwear</h4>
+               <a href="#">Jackets</a>
+               <a href="#">Sweatshirts</a>
+               <a href="#">Sweaters</a>
+               <a href="#">Blazers & Waistcoats</a>
+          </div>
+
+          <div class="mega-col">
+            <h4>Plus Size</h4>
+               <a href="#">Dresses & Gowns</a>
+               <a href="#">Tops & Tees</a>
+               <a href="#">Bottomwear</a>
+          </div>
+        </div>
+      </li>
+
+       <!-- Lingerie -->
+       <li class="nav-item mega">
+        <span class="nav-link">Lingerie</span>
+        <div class="mega-menu">
+          <div class="mega-col">
+            <h4>Innerwear</h4>
+             <a href="#">Women Bra</a>
+             <a href="#">Women Panties</a>
+             <a href="#">Other Innerwear</a>
+          </div>
+          <div class="mega-col">
+            <h4>Sleepwear</h4>
+              <a href="#">Women Nightsuits</a>
+              <a href="#">Women Nightdress</a>
+              <a href="#">Other Sleepwear</a>
+          </div>
+          <div class="mega-col">
+             <h4>Sports Wear</h4>
+             <a href="#">Sports Bottomwear</a>
+             <a href="#">Sports Bra</a>
+             <a href="#">Top & Bottom Sets</a>
+          </div>
+          <div class="mega-col">
+            <h4>Maternity Wear</h4>
+              <a href="#">Kurti & Topwear</a>
+              <a href="#">Feeding Bras</a>
+              <a href="#">Briefs & Bottomwear</a>     
+            </div>
+        </div>
+      </li>
+
+       <!-- Men -->
+       <li class="nav-item mega">
+        <span class="nav-link">Men</span>
+        <div class="mega-menu">
+          <div class="mega-col">
+            <h4>Top Wear</h4>
+               <a href="#">Summer T-Shirts</a>
+               <a href="#">Shirts</a>
+               <a href="#">T-Shirt Combos</a>
+          </div>
+         <div class="mega-col">
+             <h4>Bottom Wear</h4>
+             <a href="#">Jeans</a>
+             <a href="#">Cargos / Trousers</a>
+             <a href="#">Dhotis / Lungis</a>
+         </div>
+         <div class="mega-col">
+            <h4>Ethnic Wear</h4>
+            <a href="#">Kurtas</a>
+            <a href="#">Kurta Sets</a>
+            <a href="#">Nehru Jacket</a>
+         </div>
+        <div class="mega-col">
+           <h4>Innerwear</h4>
+           <a href="#">Vests</a>
+           <a href="#">Briefs</a>
+           <a href="#">Boxers</a>
+        </div>
+        <div class="mega-col">
+          <h4>Sports Wear</h4>
+          <a href="#">Trackpants</a>
+          <a href="#">Tracksuits</a>
+          <a href="#">Gym T-Shirts</a>
+        </div>
+        <div class="mega-col">
+          <h4>Night Wear</h4>
+          <a href="#">Pyjamas</a>
+          <a href="#">Night Shorts</a>
+          <a href="#">Nightsuits</a>
+        </div>
+       <div class="mega-col">
+          <h4>Winter Wear</h4>
+          <a href="#">Shrugs</a>
+          <a href="#">Jackets</a>
+          <a href="#">Sweatshirts</a>
+        </div>
+        </div>
+      </li>
+
+      <!-- KIDS & TOYS -->
+      <li class="nav-item mega">
+       <span class="nav-link">Kids & Toys</span>
+          <div class="mega-menu">
+            <div class="mega-col">
+              <h4>Kids Clothing</h4>
+              <a href="#">Girls</a>
+              <a href="#">Boys</a>
+              <a href="#">Babies</a>
+              <a href="#">Clothing Sets</a>
+            </div>
+            <div class="mega-col">
+              <h4>Kids Toys</h4>
+              <a href="#">Toys & Games</a>
+              <a href="#">Summer Picks</a>
+              <a href="#">Best Sellers</a>
+              <a href="#">Baby Gears</a>
+           </div>
+            <div class="mega-col">
+              <h4>Kids Accessories</h4>
+              <a href="#">Bags & Backpacks</a>
+              <a href="#">Kid Accessories</a>
+              <a href="#">Party Items</a>
+           </div>
+           <div class="mega-col">
+             <h4>Baby Care</h4>
+             <a href="#">View All</a>
+             <a href="#">Baby Bedding</a>
+             <a href="#">Diapers</a>
+             <a href="#">Baby Dry Sheets</a>
+            </div>
+        </div>
+      </li>
+
+      <!-- HOME & KITCHEN -->
+      <li class="nav-item mega">
+        <span class="nav-link">Home & Kitchen</span>
+          <div class="mega-menu">
+            <div class="mega-col">
+              <h4>Home Decor</h4>
+              <a href="#">View All</a>
+              <a href="#">Covers</a>
+              <a href="#">Key Holders</a>
+              <a href="#">Pooja Needs</a>
+              <a href="#">Wallpapers</a>
+              <a href="#">Clocks</a>
+           </div>
+           <div class="mega-col">
+              <h4>Kitchen & Appliances</h4>
+               <a href="#">View All</a>
+              <a href="#">Storage</a>
+              <a href="#">Cookware</a>
+              <a href="#">Kitchen Tools</a>
+           </div>
+            <div class="mega-col">
+             <h4>Home Textiles</h4>
+              <a href="#">View All</a>
+             <a href="#">Bedsheets</a>
+             <a href="#">Curtains & Accessories</a>
+             <a href="#">Doormats & Carpets</a>
+             <a href="#">Pillow, Cushion & Covers</a>
+             <a href="#">Blanktes & Comforters</a>
+          </div>
+          <div class="mega-col">
+             <h4>Home Improvement</h4>
+              <a href="#">All Home Essentials</a>
+             <a href="#">Bothroom Accessories</a>
+             <a href="#">Cleaning Supplier</a>
+             <a href="#">Gardening</a>
+             <a href="#">Home Tools</a>
+          </div>
+           <div class="mega-col">
+             <h4>Furniture</h4>
+              <a href="#">Shoe Racks</a>
+             <a href="#">Study Tables</a>
+             <a href="#">Wall Shelves</a>
+             <a href="#">Collapsible Wardrobes</a>
+             <a href="#">Home Temple</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- BEAUTY -->
+      <li class="nav-item mega">
+        <span class="nav-link">Beauty & Health</span>
+         <div class="mega-menu">
+           <div class="mega-col">
+             <h4>Makeup</h4>
+             <a href="#">Lipstick</a>
+             <a href="#">Face Makeup</a>
+             <a href="#">Makeup Kits</a>
+             <a href="#">Hair Curlers</a>
+             <a href="#">Lipstick</a>
+             <a href="#">Nail Makeup</a>
+             <a href="#">Hair Removal</a>
+           </div>
+           <div class="mega-col">
+             <h4>Personal Care</h4>
+              <a href="#">View All</a>
+             <a href="#">Hair Oil & Shampoo</a>
+              <a href="#">Body Lotion</a>
+             <a href="#">Whitening Creams</a>
+             <a href="#">Face Wash</a>
+             <a href="#">Soaps & Scrubs</a>
+           </div>
+            <div class="mega-col">
+             <h4>Health Care</h4>
+             <a href="#">View All</a>
+             <a href="#">Oral Care</a>
+             <a href="#">Winter Healthcare</a>
+              <a href="#">Ear Cleaner</a>
+             <a href="#">Foot Care</a>
+           </div>
+           <div class="mega-col">
+             <h4>Men Care</h4>
+             <a href="#">Trimmers</a>
+             <a href="#">Beard Oil</a>
+             <a href="#">Men Perfumes</a>
+           </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  {% if active_step %}
+    {% include "partials/checkout_header.html" %}
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ✅ TOAST MESSAGE (Logged in successfully) -->
+{% if messages %}
+  <div id="toastWrap" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);z-index:99999;">
+    {% for message in messages %}
+      <div class="toast-msg {{ message.tags }}" style="
+        display:flex;align-items:center;gap:10px;
+        background:#13a13a;color:#fff;
+        padding:12px 18px;border-radius:10px;
+        font-weight:700;min-width:280px;
+        box-shadow:0 10px 25px rgba(0,0,0,.15);
+      ">
+        <span style="width:22px;height:22px;border-radius:50%;background:#fff;color:#13a13a;display:flex;align-items:center;justify-content:center;font-weight:900;">
+          ✓
+        </span>
+        <span>{{ message }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    setTimeout(() => {
+      const wrap = document.getElementById("toastWrap");
+      if(wrap) wrap.style.display = "none";
+    }, 2500);
+  </script>
+{% endif %}
+<!-- ===== FOOTER ===== -->
+<footer class="meesho-footer">
+  <div class="footer-wrapper">
+    <div class="footer-section main-branding">
+      <h1>Shop Non-Stop on Meesho</h1>
+      <p>Trusted by crores of Indians<br>Cash on Delivery | Free Delivery</p>
+      <div class="app-links">
+        <a href="#"><img src="{% static 'images/playstore-icon.jpg' %}" alt="Google Play"></a>
+        <a href="#"><img src="{% static 'images/appstore-icon.jpg' %}" alt="App Store"></a>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <ul class="footer-links">
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Become a supplier</a></li>
+        <li><a href="#">Hall of Fame</a></li>
+        <li><a href="#">Sitemap</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <ul class="footer-links">
+        <li><a href="#">Legal and Policies</a></li>
+        <li><a href="#">Meesho Tech Blog</a></li>
+        <li><a href="#">Notices and Returns</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3 class="section-title">Reach out to us</h3>
+      <div class="social-media">
+        <img src="{% static 'images/facebook.jpg' %}" alt="FB">
+        <img src="{% static 'images/instagram.jpg' %}" alt="IG">
+        <img src="{% static 'images/youtube.jpg' %}" alt="YT">
+        <img src="{% static 'images/linkedin.jpg' %}" alt="LI">
+        <img src="{% static 'images/twitter.jpg' %}" alt="TW">
+      </div>
+      <h3 class="section-title">Contact Us</h3>
+      <div class="contact-info">
+        <p>Meesho Technologies Pvt Ltd<br>
+          CIN: U62099KA2024PTC186568<br>
+          3rd Floor, Wing-E, Helios Business Park, Kadubeesanahalli Village, Varthur Hobli, Outer Ring Road Bellandur, Bangalore, Karnataka, India, 560103<br>
+          E-mail: <a href="mailto:query@meesho.com">query@meesho.com</a><br>
+          © 2015-2026 Meesho.com
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- JS -->
+<script>
+function toggleProfile() {
+  const menu = document.getElementById("profileMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+document.addEventListener("click", function(event) {
+  const profile = document.querySelector(".profile-container");
+  if (!profile.contains(event.target)) {
+    document.getElementById("profileMenu").style.display = "none";
+  }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

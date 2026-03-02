@@ -1,0 +1,312 @@
+/* ===== GLOBAL ===== */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+}
+
+/* ===== LOGO ===== */
+.meesho-logo {
+    color: #9f2089;
+    font-weight: bold;
+    font-size: 28px;
+}
+
+/* ===== SEARCH BOX ===== */
+.search-box {
+    width: 450px;
+    border-radius: 6px;
+}
+
+/* ===== HEADER LINKS ===== */
+.header-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.header-links a:hover {
+    color: #9f2089;
+}
+
+/* ===== NAVBAR ===== */
+.navbar .nav-link {
+    font-size: 14px;
+    color: #333;
+    margin-right: 10px;
+    font-weight:bold;
+}
+
+.navbar .nav-link:hover {
+    color: #9f2089;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    background: linear-gradient(90deg, #9f2089, #c850c0);
+    padding: 60px 0;
+}
+
+.hero-section h1 {
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.hero-section h3 {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+/* ===== QR BOX ===== */
+.qr-box {
+    background-color: #ffffff;
+    padding: 20px;
+    width: 200px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.qr-box p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.qr-placeholder {
+    width: 120px;
+    height: 120px;
+    border: 2px dashed #333;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* ===== FEATURES SECTION ===== */
+.features {
+    background-color: #fde9f4;
+    font-weight: bold;
+    font-size: 16px;
+}
+/* ===== CATEGORY ICON SECTION ===== */
+.icon-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;                 /* ⭐ allows next row */
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* EACH CATEGORY BOX */
+.icon-box {
+    text-align: center;
+    width: 120px;                    /* ⭐ fixed width */
+    cursor: pointer;
+}
+
+/* IMAGE STYLE */
+.icon-box img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #f2e7f1;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+/* HOVER EFFECT */
+.icon-box:hover img {
+    transform: scale(1.05);
+}
+
+/* TEXT STYLE */
+.icon-box p {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+.profile-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 230px;
+  background: white;
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+}
+
+.profile-header {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+}
+
+.profile-dropdown a {
+  padding: 10px 15px;
+  display: block;
+  color: #333;
+  text-decoration: none;
+}
+
+.profile-dropdown a:hover {
+  background-color: #f5f5f5;
+}
+
+
+.profile-wrapper {
+  position: relative;
+}
+
+.profile-link {
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 250px;
+  background: #fff;
+  border-radius: 10px;
+  display: none;   /* IMPORTANT */
+  z-index: 1000;
+}
+
+.profile-header {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  align-items: center;
+}
+
+.profile-dropdown a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.profile-dropdown a:hover {
+  background: #f5f5f5;
+}
+
+/* footer */
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.meesho-footer {
+    background-color: #f8f9ff;
+    padding: 60px 5% 40px 5%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #353543;
+}
+
+.footer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 30px;
+    padding: 0 15px;
+}
+
+/* Typography for main heading */
+.main-branding h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #353543;
+}
+
+.main-branding p {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* App Buttons */
+.app-links img {
+    height: 45px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Link Lists */
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 18px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #555;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.footer-links a:hover {
+    color: #f43397; /* Meesho Pink on hover */
+}
+
+/* Social Media Section */
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.social-media {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.social-media img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+/* Contact Info Details */
+.contact-info p {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.6;
+    margin-bottom: 4px;
+}
+
+.contact-info a {
+    color: #777;
+    text-decoration: none;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    .footer-wrapper {
+        flex-direction: column;
+    }
+}
+

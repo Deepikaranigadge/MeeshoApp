@@ -1,0 +1,161 @@
+{% load static %}
+<style>
+  :root{
+    --blue:#5585F8;
+    --grey:#C9CEDA;
+    --track:#D7DBE5;
+    --text:#111827;
+    --muted:#9CA3AF;
+  }
+
+  .ck-header{
+    background:#fff;
+    border-bottom:1px solid #eee;
+    height:72px;
+    display:flex;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  .ck-inner{
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 18px;
+    display:flex;
+    align-items:center;
+    position:relative;
+  }
+  .ck-logo{ display:flex; align-items:center; text-decoration:none; }
+  .ck-logo img{ height:36px; }
+
+  /* ===== Stepper (2 steps) ===== */
+  .stepper{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(420px, 70vw);
+    display:flex;
+    justify-content:space-between;
+    padding-top:6px;
+  }
+
+  .stepper .track{
+    position:absolute;
+    left:25%;
+    right:25%;
+    top:16px;
+    height:3px;
+    background:var(--track);
+    border-radius:999px;
+  }
+
+  .stepper .progress{
+    position:absolute;
+    left:25%;
+    top:16px;
+    height:3px;
+    background:var(--blue);
+    border-radius:999px;
+    width:0%;
+  }
+
+  .step{
+    width:50%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    z-index:1;
+  }
+
+  .circle{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    background:#fff;
+    border:2px solid var(--grey);
+    color:var(--muted);
+  }
+
+  /* DONE = blue filled with tick */
+  .step.done .circle{
+    background:var(--blue);
+    border-color:var(--blue);
+    color:#fff;
+    font-size:14px;
+  }
+
+  /* ACTIVE = blue border + blue number */
+  .step.active .circle{
+    border-color:var(--blue);
+    color:var(--blue);
+    background:#fff;
+  }
+
+  .label{
+    margin-top:8px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--muted);
+  }
+
+  .step.done .label,
+  .step.active .label{
+    color:var(--text);
+  }
+
+  @media (max-width: 520px){
+    .label{ font-size:12px; }
+    .circle{ width:24px; height:24px; font-size:12px; }
+    .stepper .track, .stepper .progress{ top:15px; }
+  }
+</style>
+
+<header class="ck-header">
+  <div class="ck-inner">
+
+    <!-- Logo -->
+    <a href="{% url 'home' %}" class="ck-logo">
+      <img src="{% static 'images/meeshoLogo.png' %}" alt="Meesho">
+    </a>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="track"></div>
+
+      <!-- Progress:
+           step 1 = 0%
+           step 2 = 100% (line reaches step 2 center)
+      -->
+      <div class="progress"
+        style="
+          width:
+          {% if active_step == 1 %}0%
+          {% elif active_step == 2 %}50.00%
+          {% else %}0%
+          {% endif %};
+        ">
+      </div>
+
+      <!-- STEP 1: Review -->
+      <div class="step {% if active_step > 1 %}done{% elif active_step == 1 %}active{% endif %}">
+        <div class="circle">{% if active_step > 1 %}✓{% else %}1{% endif %}</div>
+        <div class="label">Review</div>
+      </div>
+
+      <!-- STEP 2: Payment -->
+      <div class="step {% if active_step == 2 %}active{% endif %}">
+        <div class="circle">2</div>
+        <div class="label">Payment</div>
+      </div>
+
+    </div>
+  </div>
+</header>

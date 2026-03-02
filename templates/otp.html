@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/meesho-otp.css' %}">
+</head>
+<body>
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: #fff1f5;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 14px 40px;
+  background: #fff;
+  gap: 20px;
+}
+.search {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.header-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* CARD */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.auth-card {
+  width: 433px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.banner {
+  width: 100%;
+}
+
+/* CONTENT */
+.auth-content {
+  padding: 40px 48px 70px;
+}
+
+.auth-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #353543;
+}
+
+.change-number {
+  display: inline-block;
+  margin-top: 12px;
+  color: #9f2089;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* OTP INPUT */
+.otp-box {
+  display: flex;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.otp-box input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 20px;
+  border: none;
+  border-bottom: 2px solid #cecede;
+  outline: none;
+}
+
+/* RESEND */
+.resend {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 12px;
+  color: #777;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  background: #9f2089;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  margin-top: 40px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* TERMS */
+.terms {
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  position: absolute;
+  bottom: 12px;
+  left: 40px;
+  right: 40px;
+}
+
+.terms a {
+  color: #9f2089;
+  text-decoration: none;
+}
+/* vertical divider like Meesho */
+.ms-divider{
+  border-left: 1px solid #e9e9ef;
+}
+/* SEARCH */
+.ms-search{
+  flex: 1;
+  max-width: 760px;
+  height: 44px;
+  border: 1px solid #d6d6e6;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.ms-search-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ms-search-input{
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.ms-search-input::placeholder{
+  color: #8b8ba3;
+}
+
+/* RIGHT MENU */
+.ms-actions{
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.ms-action{
+  text-decoration: none;
+  color: #222;
+  padding: 0 18px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* text items (2 lines) */
+.ms-action-text{
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* icon items (icon top, text bottom) */
+.ms-action-icon{
+  flex-direction: column;
+  gap: 6px;
+  min-width: 84px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ms-ico{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ms-action-label{
+  line-height: 1;
+}
+
+/* vertical divider like Meesho */
+.ms-divider{
+  border-left: 1px solid #e9e9ef;
+}
+
+</style>
+<!-- HEADER -->
+<header class="header">
+  <!-- Logo Image -->
+  <a href="/" class="logo-wrap">
+    <img src="{% static 'images/meeshoLogo.png'%}" class="ms-logo-img" alt="Meesho" />
+  </a>
+
+ <!-- SEARCH -->
+    <div class="ms-search">
+      <span class="ms-search-icon" aria-hidden="true">
+        <!-- search svg -->
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M19.77 18.67L16.01 14.91C17.33 13.33 18.13 11.3 18.13 9.08C18.13 4.06 14.07 0 9.06 0C4.06 0 0 4.06 0 9.08C0 14.1 4.06 18.16 9.06 18.16C11.29 18.16 13.33 17.35 14.91 16.01L18.67 19.77C18.97 20.07 19.47 20.07 19.77 19.77C20.08 19.47 20.08 18.97 19.77 18.67ZM9.06 16.6C4.92 16.6 1.55 13.23 1.55 9.08C1.55 4.93 4.92 1.56 9.06 1.56C13.2 1.56 16.57 4.93 16.57 9.08C16.57 13.23 13.2 16.6 9.06 16.6Z"
+                fill="#8B8BA3"/>
+        </svg>
+      </span>
+
+      <form action="{% url 'search_products' %}" method="get" class="ms-search">
+      <input
+        class="ms-search-input"
+        type="text"
+        name="q" 
+        placeholder="Try Saree, Kurti or Search by Product Code"
+        required
+       />
+      </form>
+    </div>
+
+    <!-- RIGHT MENU -->
+    <nav class="ms-actions">
+
+      <a href="#" class="ms-action ms-action-text">
+        <span>Become a Supplier</span>
+      </a>
+
+      <a href="#" class="ms-action ms-action-text ms-divider">
+        <span>Investor Relations</span>
+      </a>
+    </nav>
+    </header>
+
+{% if messages %}
+  <div style="max-width:433px;margin:18px auto 0;">
+    {% for message in messages %}
+      <div style="
+        background:#fff;
+        border:1px solid #ffd6e7;
+        color:#b0004d;
+        padding:12px 14px;
+        border-radius:8px;
+        font-weight:700;
+      ">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- OTP CARD -->
+<div class="auth-wrapper">
+
+  <div class="auth-card">
+
+    <!-- BANNER -->
+    <img class="banner" src="{% static 'images/Signup_image.jpg' %}" alt="banner">
+
+    <!-- CONTENT -->
+    <div class="auth-content">
+
+      <h2>Enter OTP sent to {{ phone_number }}</h2>
+
+      <a href="{% url 'signup' %}" class="change-number">CHANGE NUMBER</a>
+
+      <form method="POST" action="{% url 'verify_otp' %}">
+        {% csrf_token %}
+
+        <!-- OTP INPUTS -->
+        <div class="otp-box">
+          <input type="tel" maxlength="1" name="otp1" required>
+          <input type="tel" maxlength="1" name="otp2" required>
+          <input type="tel" maxlength="1" name="otp3" required>
+          <input type="tel" maxlength="1" name="otp4" required>
+          <input type="tel" maxlength="1" name="otp5" required>
+          <input type="tel" maxlength="1" name="otp6" required>
+        </div>
+
+        {% if not is_expired %}
+          <span class="resend">
+            Resend OTP in <b id="otpTimer">{{ remaining_seconds|default:60 }}</b> s
+          </span>
+        {% else %}
+          <a href="{% url 'resend_otp' %}" class="change-number" style="margin-top:16px;display:inline-block;">
+            RESEND OTP
+          </a>
+        {% endif %}
+
+        <button type="submit" {% if is_expired %}disabled style="opacity:.6;cursor:not-allowed;"{% endif %}>
+          Verify
+        </button>
+
+      </form>
+
+      <p class="terms">
+        By continuing, you agree to Meesho’s
+        <a href="#">Terms & Conditions</a> and
+        <a href="#">Privacy Policy</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto move to next OTP box
+  const inputs = document.querySelectorAll('.otp-box input');
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      if (input.value && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+  });
+</script>
+
+<script>
+  (function(){
+    const el = document.getElementById("otpTimer");
+    if(!el) return;
+
+    let s = parseInt(el.textContent.trim(), 10);
+    if (isNaN(s)) s = 60;
+
+    const t = setInterval(() => {
+      s -= 1;
+      if(s <= 0){
+        clearInterval(t);
+        location.reload(); // reload to show RESEND OTP
+      } else {
+        el.textContent = s; // ✅ number only
+      }
+    }, 1000);
+  })();
+</script>
+
+</body>
+</html>

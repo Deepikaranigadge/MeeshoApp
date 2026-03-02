@@ -1,0 +1,911 @@
+{% load static %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:Roboto, sans-serif; background:#fff; color:#111827; }
+
+  :root{
+    --meesho:#9f2089;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --bg:#ffffff;
+    --green:#16a34a;
+    --green-bg:#d1fae5;
+    --green-text:#065f46;
+  }
+
+  .rv-wrap{
+    max-width:1200px;
+    margin: 18px auto 40px;
+    padding: 0 18px;
+  }
+
+  .rv-grid{
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap: 28px;
+    align-items:start;
+    padding-top: 22px;
+  }
+
+  .card{
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  /* Product Details card */
+  .pd-card{ padding: 16px;  max-width: 760px;
+  margin: 0 auto; }
+
+  .pd-row{
+    display:grid;
+    grid-template-columns: 68px 1fr;
+    gap: 14px;
+    align-items:start;
+  }
+
+  .pd-img{
+    width:68px;
+    height:68px;
+    border-radius:10px;
+    border:1px solid #eee;
+    overflow:hidden;
+    background:#fff;
+  }
+  .pd-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .pd-name{
+    font-size:16px;
+    font-weight:800;
+    color:#111827;
+    line-height:1.25;
+    margin-bottom: 8px;
+  }
+
+  .pd-price{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom: 10px;
+  }
+  .pd-price .sell{
+    font-size:18px;
+    font-weight:900;
+    color:#111827;
+  }
+  .pd-price .mrp{
+    font-size:14px;
+    font-weight:700;
+    color:#9ca3af;
+    text-decoration: line-through;
+  }
+  .pd-price .off{
+    font-size:14px;
+    font-weight:900;
+    color: var(--green);
+  }
+
+  .pd-meta{
+    display:flex;
+    gap:18px;
+    color:#111827;
+    font-weight:700;
+    margin-top: 4px;
+  }
+  .pd-meta small{
+    color: var(--muted);
+    font-weight:700;
+  }
+
+  .pd-edit{
+    color: var(--meesho);
+    font-weight:900;
+    letter-spacing:.2px;
+    text-decoration:none;
+    font-size:14px;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }
+
+  .pd-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top: 1px solid var(--border);
+    margin-top: 14px;
+    padding-top: 12px;
+    color:#111827;
+    font-weight:700;
+  }
+  .pd-foot .muted{ color: var(--muted); font-weight:700; }
+
+  /* Price Details card */
+  .pr-card{ padding: 16px; }
+  .pr-title{
+    font-size:18px;
+    font-weight:900;
+    margin-bottom: 14px;
+  }
+  .pr-line{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f2f4;
+    color:#111827;
+    font-weight:700;
+  }
+  .pr-line a{
+    color:#111827;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+  .pr-line .pos{ color:#111827; }
+  .pr-line .neg{ color: var(--green); font-weight:900; }
+
+  .pr-total{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 14px 0 6px;
+    font-size:18px;
+    font-weight:900;
+    color:#111827;
+  }
+
+  .pr-green{
+    margin-top: 10px;
+    background: var(--green-bg);
+    border-radius: 8px;
+    padding: 12px 12px;
+    color: var(--green-text);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:900;
+  }
+  .pr-green .dot{
+    width:18px;height:18px;border-radius:50%;
+    background:#10b981;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    flex:0 0 auto;
+  }
+
+  .pr-note{
+    margin-top: 14px;
+    text-align:center;
+    color:#6b7280;
+    font-weight:700;
+    font-size:13px;
+  }
+
+  .pr-btn{
+    margin-top: 10px;
+    width:100%;
+    height: 46px;
+    border:none;
+    border-radius: 6px;
+    background: var(--meesho);
+    color:#fff;
+    font-weight:900;
+    font-size:16px;
+    cursor:pointer;
+  }
+  .pr-btn:hover{ filter: brightness(0.95); }
+
+  /* ✅ Safety banner */
+  .safe-banner{
+    
+    border:2px solid #111827;
+    border-radius:10px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .safe-banner img{
+    width:100%;
+    display:block;
+  }
+
+  @media (max-width: 980px){
+    .rv-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ========================= */
+  /* ✅ Address Drawer (kept for CHANGE button) */
+  /* ========================= */
+
+  .addr-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(17,24,39,0.65);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+    z-index:9998;
+  }
+
+  .addr-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    height:100vh;
+    width:min(520px, 92vw);
+    background:#fff;
+    box-shadow:-10px 0 30px rgba(0,0,0,0.25);
+    transform:translateX(100%);
+    transition:transform .28s ease;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .addr-overlay.show{ opacity:1; pointer-events:auto; }
+  .addr-drawer.show{ transform:translateX(0); }
+
+  .addr-head{
+    height:74px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 0 18px;
+    gap: 10px;
+    background:#fff;
+  }
+  .addr-lefthead{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+  .addr-title{
+    font-weight:900;
+    letter-spacing:.4px;
+    color:#111827;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .addr-back{
+    width:38px;
+    height:38px;
+    border:none;
+    background:transparent;
+    font-size:22px;
+    cursor:pointer;
+    color:#111827;
+    display:none;
+  }
+  .addr-close{
+    width:40px;
+    height:40px;
+    border:none;
+    background:transparent;
+    font-size:22px;
+    cursor:pointer;
+    color:#111827;
+  }
+
+  .addr-panels{
+    position:relative;
+    flex:1;
+    overflow:hidden;
+  }
+  .addr-panel{
+    position:absolute;
+    inset:0;
+    overflow:auto;
+    background:#fff;
+    transition:transform .25s ease;
+  }
+  .addr-panel.list{ transform:translateX(0); }
+  .addr-panel.add{ transform:translateX(100%); }
+  .addr-panels.show-add .addr-panel.list{ transform:translateX(-100%); }
+  .addr-panels.show-add .addr-panel.add{ transform:translateX(0); }
+  .addr-panels.show-add .addr-back{ display:inline-flex; }
+
+  .addr-search{ padding: 14px 18px; }
+  .addr-searchbox{
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding: 12px 12px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .addr-searchbox input{
+    border:none;
+    outline:none;
+    width:100%;
+    font-size:15px;
+  }
+
+  .addr-addnew{
+    width:100%;
+    text-align:left;
+    padding: 12px 18px;
+    color:#9f2089;
+    font-weight:900;
+    border:none;
+    background:#fff;
+    cursor:pointer;
+    border-top:1px solid #f3f4f6;
+    border-bottom:1px solid #f3f4f6;
+  }
+
+  .addr-list{ padding: 12px 14px 18px; }
+
+  .addr-item{
+    display:flex;
+    gap:12px;
+    padding: 14px;
+    border-radius:12px;
+    border:1px solid #eef2f7;
+    background:#fff;
+    cursor:pointer;
+    margin-bottom:12px;
+  }
+
+  .addr-empty{
+    padding:16px;
+    color:#6b7280;
+    font-weight:800;
+  }
+
+  /* ADD FORM */
+  .drawer-add-wrap{
+    background:#f6f7fb;
+    font-family: Arial, sans-serif;
+    min-height:100%;
+    padding:16px;
+  }
+  .drawer-add-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:600;
+    font-size:16px;
+    padding:14px 6px 12px;
+    border-bottom:1px solid #ddd;
+    background:#fff;
+  }
+  .drawer-add-close{
+    font-size:22px;
+    cursor:pointer;
+    border:none;
+    background:transparent;
+  }
+  .drawer-form-control,
+  .drawer-form-select{
+    width:100%;
+    border:none;
+    border-bottom:1px solid #cfcfe0;
+    border-radius:0;
+    padding:10px 0;
+    font-size:15px;
+    outline:none;
+    background:transparent;
+  }
+  .drawer-save-fixed{
+    position:sticky;
+    bottom:0;
+    background:#f6f7fb;
+    padding:12px 0 6px;
+    margin-top:16px;
+  }
+  .drawer-save-btn{
+    background-color:#9c1f7a;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    border-radius:6px;
+    padding:12px;
+    width:100%;
+    border:none;
+    cursor:pointer;
+  }
+
+  /* ========================= */
+  /* ✅ EDIT ITEM DRAWER (NEW) */
+  /* ========================= */
+
+  /* Reuse same drawer styles but different IDs */
+  .edit-title{ font-weight:900; letter-spacing:.4px; color:#111827; }
+  .qty-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+  }
+  .qty-btn{
+    width:38px;height:38px;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    background:#fff;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:900;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .qty-input{
+    width:62px;
+    height:38px;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    text-align:center;
+    font-weight:900;
+    outline:none;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% include "partials/review_header.html" with active_step=1 %}
+
+<div class="rv-wrap">
+  <div class="rv-grid">
+
+    <!-- LEFT -->
+    <div>
+
+      <div class="card pd-card">
+
+        <div style="display:flex;align-items:center;gap:10px;font-weight:800;color:#111827;
+                    border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+          <i class="bi bi-truck" style="font-size:18px;"></i>
+          <span>Estimated Delivery by <span style="font-weight:900;">{{ eta_text|default:"Sunday, 01st Mar" }}</span></span>
+        </div>
+
+        <div class="pd-row">
+          <div class="pd-img">
+            <img src="{{ product.image.url }}" alt="{{ product.title }}">
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <div style="flex:1;min-width:0;">
+              <div class="pd-name">{{ product.title }}</div>
+
+              <div class="pd-price">
+                <span class="sell">₹{{ product.price|floatformat:0 }}</span>
+
+                {% if product.mrp and product.mrp > product.price %}
+                  <span class="mrp">₹{{ product.mrp|floatformat:0 }}</span>
+                  <span class="off">{{ product.calc_discount_percent }}% Off</span>
+                {% endif %}
+              </div>
+
+              <div class="pd-meta">
+                <div><small>Size:</small> <span>{{ size }}</span></div>
+                <div><small>Qty:</small> <span>{{ qty|default:1 }}</span></div>
+              </div>
+            </div>
+
+            <div style="padding-top:6px;">
+              <!-- ✅ CHANGED: EDIT now opens drawer (no redirect) -->
+              <button class="pd-edit" type="button" id="openEditDrawerBtn">EDIT</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pd-foot">
+          <div class="muted">
+            Sold by:
+            <span style="color:#111827;font-weight:900;">
+              {{ product.seller_name|default:"MD FASHION HUB" }}
+            </span>
+          </div>
+          <div style="color:#111827;font-weight:900;">Free Delivery</div>
+        </div>
+      </div>
+
+      <!-- ✅ DELIVERY ADDRESS BOX (shows only if selected_address exists) -->
+      {% if selected_address %}
+      <div class="card" style="margin-top:16px; padding:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px; font-weight:900; font-size:18px;">
+            <span style="color:#9f2089; font-size:20px;">📍</span>
+            <span>Delivery Address</span>
+          </div>
+
+          <button type="button"
+                  style="border:none;background:transparent;color:#9f2089;font-weight:900;font-size:14px;cursor:pointer;"
+                  id="changeAddressBtn">
+            CHANGE
+          </button>
+        </div>
+
+        <div style="border:1px solid #e5e7eb; border-radius:10px; padding:14px;">
+          <div style="font-size:22px; font-weight:900; margin-bottom:8px;">
+            {{ selected_address.name }}
+          </div>
+
+          <div style="color:#374151; line-height:1.45; margin-bottom:10px;">
+            {{ selected_address.house }}{% if selected_address.area %}, {{ selected_address.area }}{% endif %},
+            {{ selected_address.city }}, {{ selected_address.state }} - {{ selected_address.pincode }}
+          </div>
+
+          <div style="color:#111827; font-weight:700;">
+            {{ selected_address.phone }}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <div class="card pr-card">
+        <div class="pr-title">Price Details ({{ qty|default:1 }} Items)</div>
+
+        <div class="pr-line">
+          <a href="#">Product Price</a>
+          <span class="pos">+ ₹{{ product.mrp|default:product.price|floatformat:0 }}</span>
+        </div>
+
+        <div class="pr-line" style="border-bottom:none;">
+          <a href="#" style="color:var(--green);">Total Discounts</a>
+          {% if discount_amount and discount_amount > 0 %}
+            <span class="neg">- ₹{{ discount_amount|floatformat:0 }}</span>
+          {% else %}
+            <span class="neg">- ₹0</span>
+          {% endif %}
+        </div>
+
+        <div style="height:1px;background:var(--border);margin:12px 0;"></div>
+
+        <div class="pr-total">
+          <span>Order Total</span>
+          <span>₹{{ product.price|floatformat:0 }}</span>
+        </div>
+
+        {% if discount_amount and discount_amount > 0 %}
+          <div class="pr-green">
+            <span class="dot">✓</span>
+            <span>Yay! Your total discount is ₹{{ discount_amount|floatformat:0 }}</span>
+          </div>
+        {% endif %}
+
+        <div class="pr-note">Clicking on 'Continue' will not deduct any money</div>
+
+        <!-- ✅ Continue ALWAYS goes to buy_payment -->
+        <button class="pr-btn"
+                type="button"
+                id="continueBtn"
+                data-next-url="{% url 'buy_payment' %}?product_id={{ product.id }}">
+          Continue
+        </button>
+
+        <div class="safe-banner">
+          <img src="{% static 'images/meesho_safe.jpg' %}" alt="Meesho Safe">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ✅ Drawer Overlay + Drawer (kept for CHANGE button only) -->
+<div class="addr-overlay" id="addrOverlay"></div>
+
+<aside class="addr-drawer" id="addrDrawer" aria-hidden="true">
+  <div class="addr-head">
+    <div class="addr-lefthead">
+      <button class="addr-back" type="button" id="addrBackBtn">‹</button>
+      <div class="addr-title" id="addrHeaderTitle">SELECT DELIVERY ADDRESS</div>
+    </div>
+    <button class="addr-close" type="button" id="closeAddressDrawer">✕</button>
+  </div>
+
+  <div class="addr-panels" id="addrPanels">
+
+    <!-- PANEL 1: LIST -->
+    <div class="addr-panel list">
+      <div class="addr-search">
+        <div class="addr-searchbox">
+          <span class="addr-search-ico">🔎</span>
+          <input type="text" id="addrSearchInput" placeholder="Search Address by Name or Phone Number">
+        </div>
+      </div>
+
+      <button class="addr-addnew" type="button" id="openAddAddressPanel">+ ADD NEW ADDRESS</button>
+
+      <div class="addr-list" id="addrList">
+        {% if addresses %}
+          {% for a in addresses %}
+            <div class="addr-item"
+                 data-search="{{ a.name|default:'' }} {{ a.phone|default:'' }} {{ a.house|default:'' }} {{ a.area|default:'' }} {{ a.city|default:'' }} {{ a.state|default:'' }} {{ a.pincode|default:'' }}">
+              <div style="flex:1;">
+                <div style="font-size:18px;font-weight:900;margin-bottom:6px;">{{ a.name }}</div>
+                <div style="color:#374151;margin-bottom:10px;">
+                  {{ a.house }}{% if a.area %}, {{ a.area }}{% endif %}, {{ a.city }}, {{ a.state }} - {{ a.pincode }}
+                </div>
+                <div style="font-weight:800;margin-bottom:10px;">{{ a.phone }}</div>
+
+                <a class="addr-deliver-btn" href="{% url 'select_address' a.id %}">
+                  Deliver to this Address
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="addr-empty">No address found. Click <b>+ ADD NEW ADDRESS</b></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- PANEL 2: ADD FORM -->
+    <div class="addr-panel add">
+      <form method="POST" action="{% url 'enter_address' %}" id="drawerAddAddressForm">
+        {% csrf_token %}
+        <div class="drawer-add-wrap">
+          <div class="drawer-add-header">
+            <span>ADD DELIVERY ADDRESS</span>
+            <button type="button" class="drawer-add-close" id="drawerAddCloseBtn">✕</button>
+          </div>
+
+          <div style="padding:0 6px;">
+            <input type="text" class="drawer-form-control" name="name" placeholder="Name" required>
+            <input type="text" class="drawer-form-control" name="phone" placeholder="Contact Number" required>
+
+            <input type="text" class="drawer-form-control" name="house" placeholder="House no. / Building name" required>
+            <input type="text" class="drawer-form-control" name="area" placeholder="Road name / Area / Colony" required>
+            <input type="text" class="drawer-form-control" name="pincode" placeholder="Pincode" required>
+            <input type="text" class="drawer-form-control" name="city" placeholder="City" required>
+
+            <select class="drawer-form-select" name="state" required>
+              <option value="" selected disabled>State</option>
+              <option>Karnataka</option>
+              <option>Maharashtra</option>
+              <option>Delhi</option>
+              <option>Tamil Nadu</option>
+              <option>Telangana</option>
+              <option>Uttar Pradesh</option>
+              <option>West Bengal</option>
+              <!-- (keep your full list if you want) -->
+            </select>
+
+            <div class="drawer-save-fixed">
+              <button type="submit" class="drawer-save-btn">
+                Save Address and Continue
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</aside>
+
+<!-- =============================== -->
+<!-- ✅ NEW: EDIT ITEM RIGHT DRAWER  -->
+<!-- =============================== -->
+<div class="addr-overlay" id="editOverlay"></div>
+
+<aside class="addr-drawer" id="editDrawer" aria-hidden="true">
+  <div class="addr-head">
+    <div class="addr-lefthead">
+      <div class="addr-title">EDIT ITEM</div>
+    </div>
+    <button class="addr-close" type="button" id="closeEditDrawer">✕</button>
+  </div>
+
+  <div style="padding:16px; overflow:auto;">
+    <div style="display:flex; gap:12px;">
+      <div style="width:80px;height:80px;border-radius:12px;border:1px solid #eee;overflow:hidden;">
+        <img src="{{ product.image.url }}" alt="{{ product.title }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+
+      <div style="flex:1; min-width:0;">
+        <div style="font-weight:900; line-height:1.25;">{{ product.title }}</div>
+
+        <div style="margin-top:8px; display:flex; gap:10px; align-items:baseline;">
+          <div style="font-size:18px;font-weight:900;">₹{{ product.price|floatformat:0 }}</div>
+          {% if product.mrp and product.mrp > product.price %}
+            <div style="font-size:14px;font-weight:800;color:#9ca3af;text-decoration:line-through;">
+              ₹{{ product.mrp|floatformat:0 }}
+            </div>
+            <div style="font-size:14px;font-weight:900;color:var(--green);">
+              {{ product.calc_discount_percent }}% Off
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:#e5e7eb;margin:16px 0;"></div>
+
+    <form method="POST"
+          {% if cart_item %}
+            action="{% url 'update_cart_item' cart_item.id %}"
+          {% else %}
+            action="#"
+          {% endif %}
+          id="editItemForm">
+      {% csrf_token %}
+
+      <div style="display:flex; gap:14px; align-items:center;">
+        <div style="flex:1;">
+          <div style="font-weight:900; margin-bottom:8px;">Size</div>
+          <select name="size" class="drawer-form-select" style="border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;">
+            {% if product.sizes.all %}
+              {% for s in product.sizes.all %}
+                <option value="{{ s.name }}" {% if s.name == size %}selected{% endif %}>{{ s.name }}</option>
+              {% endfor %}
+            {% else %}
+              <option value="{{ size }}">{{ size }}</option>
+            {% endif %}
+          </select>
+        </div>
+
+        <div style="width:180px;">
+          <div style="font-weight:900; margin-bottom:8px;">Qty</div>
+          <div class="qty-row">
+            <button class="qty-btn" type="button" id="decQtyBtn">−</button>
+            <input class="qty-input" id="qtyInput" type="number" name="qty" value="{{ qty|default:1 }}" min="1" max="10">
+            <button class="qty-btn" type="button" id="incQtyBtn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:1px;background:#e5e7eb;margin:18px 0;"></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;font-weight:900;">
+        <span>Total Price</span>
+        <span>₹{{ product.price|floatformat:0 }}</span>
+      </div>
+
+      <button type="submit" class="drawer-save-btn" style="margin-top:18px;width:100%;">
+        Continue
+      </button>
+    </form>
+  </div>
+</aside>
+
+<script>
+  (function(){
+    const continueBtn = document.getElementById("continueBtn");
+    const changeAddressBtn = document.getElementById("changeAddressBtn");
+
+    const closeBtn = document.getElementById("closeAddressDrawer");
+    const overlay = document.getElementById("addrOverlay");
+    const drawer = document.getElementById("addrDrawer");
+
+    const panels = document.getElementById("addrPanels");
+    const openAdd = document.getElementById("openAddAddressPanel");
+    const backBtn = document.getElementById("addrBackBtn");
+    const headerTitle = document.getElementById("addrHeaderTitle");
+    const addCloseBtn = document.getElementById("drawerAddCloseBtn");
+
+    const searchInput = document.getElementById("addrSearchInput");
+    const list = document.getElementById("addrList");
+
+    function openDrawer(){
+      overlay.classList.add("show");
+      drawer.classList.add("show");
+      drawer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      setTimeout(()=> searchInput && searchInput.focus(), 50);
+    }
+
+    function closeDrawer(){
+      overlay.classList.remove("show");
+      drawer.classList.remove("show");
+      drawer.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      panels.classList.remove("show-add");
+      headerTitle.textContent = "SELECT DELIVERY ADDRESS";
+    }
+
+    function showAddPanel(){
+      panels.classList.add("show-add");
+      headerTitle.textContent = "ADD DELIVERY ADDRESS";
+    }
+
+    function showListPanel(){
+      panels.classList.remove("show-add");
+      headerTitle.textContent = "SELECT DELIVERY ADDRESS";
+      setTimeout(()=> searchInput && searchInput.focus(), 50);
+    }
+
+    /* ✅ FIX: Continue ALWAYS navigate to buy_payment */
+    continueBtn && continueBtn.addEventListener("click", () => {
+      const nextUrl = continueBtn.getAttribute("data-next-url");
+      window.location.href = nextUrl;
+    });
+
+    /* Drawer open only for CHANGE button */
+    changeAddressBtn && changeAddressBtn.addEventListener("click", openDrawer);
+
+    closeBtn && closeBtn.addEventListener("click", closeDrawer);
+    overlay && overlay.addEventListener("click", closeDrawer);
+
+    openAdd && openAdd.addEventListener("click", showAddPanel);
+    backBtn && backBtn.addEventListener("click", showListPanel);
+    addCloseBtn && addCloseBtn.addEventListener("click", showListPanel);
+
+    /* =============================== */
+    /* ✅ NEW: EDIT ITEM DRAWER JS      */
+    /* =============================== */
+    const openEditDrawerBtn = document.getElementById("openEditDrawerBtn");
+    const editOverlay = document.getElementById("editOverlay");
+    const editDrawer = document.getElementById("editDrawer");
+    const closeEditDrawer = document.getElementById("closeEditDrawer");
+
+    function openEditDrawer(){
+      editOverlay.classList.add("show");
+      editDrawer.classList.add("show");
+      editDrawer.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeEdit(){
+      editOverlay.classList.remove("show");
+      editDrawer.classList.remove("show");
+      editDrawer.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+
+    openEditDrawerBtn && openEditDrawerBtn.addEventListener("click", openEditDrawer);
+    closeEditDrawer && closeEditDrawer.addEventListener("click", closeEdit);
+    editOverlay && editOverlay.addEventListener("click", closeEdit);
+
+    const incQtyBtn = document.getElementById("incQtyBtn");
+    const decQtyBtn = document.getElementById("decQtyBtn");
+    const qtyInput = document.getElementById("qtyInput");
+
+    incQtyBtn && incQtyBtn.addEventListener("click", () => {
+      if(!qtyInput) return;
+      const v = parseInt(qtyInput.value || "1", 10);
+      if(v < 10) qtyInput.value = v + 1;
+    });
+
+    decQtyBtn && decQtyBtn.addEventListener("click", () => {
+      if(!qtyInput) return;
+      const v = parseInt(qtyInput.value || "1", 10);
+      if(v > 1) qtyInput.value = v - 1;
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") {
+        closeDrawer();
+        closeEdit();
+      }
+    });
+
+    // Search filter
+    if(searchInput && list){
+      searchInput.addEventListener("input", () => {
+        const q = searchInput.value.trim().toLowerCase();
+        list.querySelectorAll("[data-search]").forEach(item => {
+          const hay = (item.getAttribute("data-search") || "").toLowerCase();
+          item.style.display = hay.includes(q) ? "" : "none";
+        });
+      });
+    }
+  })();
+</script>
+
+{% endblock %}

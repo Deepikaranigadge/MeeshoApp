@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cart | Meesho Clone{% endblock %}
+
+{% block content %}
+
+<style>
+  .empty-cart-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    background:#fff;
+    width:100%;
+    min-height: calc(100vh - 120px);
+    padding: 50px 18px;
+  }
+
+  .empty-cart-box{
+    width:100%;
+    max-width: 900px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    padding: 50px 20px;
+  }
+
+  .empty-cart-title{
+    font-size:18px;
+    font-weight:600;
+    line-height:24px;
+    color:#6b7280;
+    margin:0;
+  }
+
+  .empty-cart-sub{
+    font-size:16px;
+    line-height:20px;
+    font-weight:400;
+    color:#9ca3af;
+    text-align:center;
+    margin:0 0 10px 0;
+  }
+
+  .empty-cart-btn{
+    background:#9F2089;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:10px 36px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    min-height:36px;
+  }
+  .empty-cart-btn:hover{ opacity:.95; }
+
+  .empty-cart-svg{
+    width:260px;
+    height:261px;
+    display:block;
+  }
+</style>
+
+<div class="empty-cart-wrap">
+  <div class="empty-cart-box">
+
+    <!-- ✅ Put your SVG here (full SVG code) -->
+    <svg class="empty-cart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 261" fill="none">
+      <!-- paste your paths here -->
+    </svg>
+
+    <p class="empty-cart-title">Your cart is empty</p>
+    <p class="empty-cart-sub">Just relax, let us help you find some first-class products</p>
+
+    <a href="{% url 'home' %}">
+      <button class="empty-cart-btn" type="button">Start Shopping</button>
+    </a>
+
+  </div>
+</div>
+
+{% endblock %}

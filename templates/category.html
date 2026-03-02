@@ -1,0 +1,685 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ category.name }} | Meesho Clone{% endblock %}
+
+{% block content %}
+
+<style>
+  /* ✅ KEEP SAME STYLES as index.html (only the pfy related part) */
+
+  .pfy-wrap{
+    max-width: 1400px;
+    margin: 24px auto;
+    padding: 0 18px;
+  }
+
+  /*.pfy-title{
+    font-size: 20px;
+    font-weight: 500;
+    margin: 10px 0 18px;
+    color:#111;
+  }*/
+
+  .pfy-grid{
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .pfy-sidebar{
+    position: sticky;
+    top: 88px;
+  }
+
+  .pfy-sortbox{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 10px;
+    padding: 14px 14px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .pfy-sortlabel{ font-size: 16px; color:#666; }
+
+  .pfy-sortform{ margin:0; }
+  .pfy-sortselect{
+    border:0;
+    outline:0;
+    font-weight: 600;
+    font-size: 16px;
+    color:#222;
+    background: transparent;
+    cursor:pointer;
+  }
+
+  .pfy-filtercard{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .pfy-filterhead{
+    padding: 10px 6px 6px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap: 10px;
+  }
+
+  .pfy-filtertitle{
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-size: 20px;
+    color:#111;
+  }
+
+  .pfy-filtercount{
+    margin-top: 6px;
+    color:#6a6a7a;
+    font-size: 14px;
+  }
+
+  .pfy-divider{
+    height:1px;
+    background:#eee;
+    margin: 12px 0;
+  }
+
+  .pfy-section{ padding: 2px 6px; }
+
+  .pfy-acc-head{
+    width:100%;
+    border:0;
+    background:transparent;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    font-weight: 500;
+    font-size: 20px;
+    color:#111;
+    padding: 14px 0;
+    cursor:pointer;
+  }
+
+  .pfy-acc-head .chev{
+    font-size: 16px;
+    color:#666;
+    transform: rotate(0deg);
+    transition: transform .15s ease;
+  }
+
+  .pfy-acc-head[data-open="true"] .chev{ transform: rotate(180deg); }
+
+  .pfy-acc-body{
+    padding: 6px 0 14px;
+    display: none;
+  }
+
+  .pfy-pillrow{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pfy-pill{
+    border: 1px solid #dedee9;
+    background:#fff;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    color:#333;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .pfy-pill.is-active{
+    border-color:#9f2089;
+    box-shadow: 0 0 0 3px rgba(159,32,137,.12);
+    color:#9f2089;
+  }
+
+  .pfy-chipwrap{ display:flex; flex-wrap: wrap; gap: 12px; }
+  .pfy-chip{
+    border: 1px solid #dedee9;
+    background:#fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 500;
+    color:#3f3f53;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  .pfy-chip.is-active{
+    border-color:#9f2089;
+    box-shadow: 0 0 0 3px rgba(159,32,137,.12);
+    color:#9f2089;
+    font-weight: 700;
+  }
+
+  .pfy-search2{
+    width: 100%;
+    border: 1px solid #dedee9;
+    border-radius: 10px;
+    height: 44px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 0 12px;
+    margin: 4px 0 14px;
+  }
+  .pfy-search2 i{ color:#8b8ba3; font-size: 18px; }
+  .pfy-search2 input{
+    width:100%;
+    height:100%;
+    border:0;
+    outline:0;
+    font-size: 15px;
+    color:#222;
+  }
+
+  .pfy-list{ display:flex; flex-direction: column; gap: 10px; }
+  .pfy-check{ display:flex; align-items:center; gap: 10px; font-size: 14px; color:#333; }
+  .pfy-check input{ width: 16px; height: 16px; accent-color:#9f2089; }
+
+  .pfy-checklist{ display:flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+  .pfy-checkrow{ display:flex; align-items:center; gap: 12px; font-size: 16px; color:#3f3f53; }
+  .pfy-checkrow input{ width: 18px; height: 18px; accent-color:#9f2089; }
+
+  .pfy-radio-list{ display:flex; flex-direction: column; gap: 14px; padding: 6px 0; }
+  .pfy-radio{ display:flex; align-items:center; gap: 12px; font-size: 16px; color:#3f3f53; cursor:pointer; }
+  .pfy-radio input{ width: 18px; height: 18px; accent-color:#9f2089; }
+
+  .pfy-clear{
+    border: 0;
+    background: transparent;
+    color:#9f2089;
+    font-weight:800;
+    cursor:pointer;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+  .pfy-clear:hover{ background:#faf0f8; }
+
+  /* RIGHT GRID same as index */
+  .pfy-cards{
+    display:grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .pfy-card{
+    background:#fff;
+    border:1px solid #ececf3;
+    border-radius: 12px;
+    overflow:hidden;
+  }
+  .pfy-imgwrap{ display:block; background:#fff; padding: 10px; }
+  .pfy-imgwrap img{ width:100%; height: 240px; object-fit: contain; display:block; }
+
+  .pfy-info{ padding: 12px 14px 14px; }
+  .pfy-name{
+    font-size: 16px;
+    color:#666;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 6px;
+  }
+
+  .pfy-price-row{ display:flex; align-items:baseline; gap:10px; margin-bottom: 12px; }
+  .pfy-price{ font-size: 26px; font-weight: 500; color:#111; }
+  .pfy-mrp{ color:#9ca3af; text-decoration: line-through; font-weight:600; font-size: 14px; }
+  .pfy-off{ color:#16a34a; font-weight:800; font-size: 13px; }
+
+  .pfy-chipline{ display:flex; align-items:center; gap:10px; margin: 6px 0 10px; }
+  .pfy-freedel{
+    display:inline-flex;
+    align-items:center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background:#f4f6f8;
+    color:#4b5563;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .pfy-ratingline{ display:flex; align-items:center; gap:10px; margin-top: 10px; }
+  .pfy-ratingbadge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background:#16a34a;
+    color:#fff;
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .pfy-reviews{ color:#6b7280; font-weight: 600; font-size: 13px; }
+
+  @media (max-width: 1200px){ .pfy-cards{ grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 992px){
+    .pfy-grid{ grid-template-columns: 1fr; }
+    .pfy-sidebar{ position: static; }
+    .pfy-cards{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px){ .pfy-cards{ grid-template-columns: 1fr; } }
+</style>
+
+
+<!--<div class="pfy-wrap">
+  <h1 class="pfy-title">{{ category.name }}</h1>-->
+
+  <div class="pfy-grid">
+
+    <!-- ================= LEFT SIDEBAR (SAME AS INDEX) ================= -->
+    <aside class="pfy-sidebar">
+
+      <!-- ✅ SORT (works with your category view sort param) -->
+      <div class="pfy-sortbox">
+        <span class="pfy-sortlabel">Sort by :</span>
+
+        <form method="GET" class="pfy-sortform" id="sortForm">
+          <select name="sort" class="pfy-sortselect" onchange="document.getElementById('sortForm').submit()">
+            <option value="relevance" {% if request.GET.sort == "relevance" or not request.GET.sort %}selected{% endif %}>Relevance</option>
+            <option value="price_low" {% if request.GET.sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if request.GET.sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
+          </select>
+        </form>
+      </div>
+
+      <div class="pfy-filtercard">
+        <!-- ✅ IMPORTANT: action must be category url (not home) -->
+        <form method="GET" id="filterForm" action="{% url 'category_products' category.slug %}">
+          {% if request.GET.sort %}
+            <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+          {% endif %}
+
+          <div class="pfy-filterhead">
+            <div>
+              <div class="pfy-filtertitle">FILTERS</div>
+              <div class="pfy-filtercount">{{ products|length }}+ Products</div>
+            </div>
+
+            <button type="button" class="pfy-clear" onclick="clearAllFilters()">Clear All</button>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Gender (remove this section if no gender field in Product) -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('genderBody', this)" data-open="true">
+              <span>Gender</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="genderBody" style="display:block;">
+              <div class="pfy-pillrow">
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Boys', this)">Boys</button>
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Girls', this)">Girls</button>
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Men', this)">Men</button>
+                <button type="button" class="pfy-pill" onclick="setSingle('gender','Women', this)">Women</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Color (remove if no color field) -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('colorBody', this)" data-open="false">
+              <span>Color</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="colorBody">
+              <div class="pfy-search2">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search" oninput="filterChips(this.value)">
+              </div>
+
+              <div class="pfy-chipwrap" id="chipWrap">
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Black', this)">Black</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','White', this)">White</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Red', this)">Red</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Blue', this)">Blue</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Green', this)">Green</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Pink', this)">Pink</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Purple', this)">Purple</button>
+                <button type="button" class="pfy-chip" onclick="toggleMulti('color','Yellow', this)">Yellow</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Fabric (remove if no fabric field) -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('fabricBody', this)" data-open="false">
+              <span>Fabric</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="fabricBody">
+              <div class="pfy-list">
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Cotton" onchange="document.getElementById('filterForm').submit()">
+                  Cotton
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Polyester" onchange="document.getElementById('filterForm').submit()">
+                  Polyester
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Rayon" onchange="document.getElementById('filterForm').submit()">
+                  Rayon
+                </label>
+                <label class="pfy-check">
+                  <input type="checkbox" name="fabric" value="Silk" onchange="document.getElementById('filterForm').submit()">
+                  Silk
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Size (remove if no sizes ManyToMany) -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('sizeBody', this)" data-open="false">
+              <span>Size</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="sizeBody">
+              <div class="pfy-checklist">
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="S" onchange="document.getElementById('filterForm').submit()"> S
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="M" onchange="document.getElementById('filterForm').submit()"> M
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="L" onchange="document.getElementById('filterForm').submit()"> L
+                </label>
+                <label class="pfy-checkrow">
+                  <input type="checkbox" name="size" value="XL" onchange="document.getElementById('filterForm').submit()"> XL
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="pfy-divider"></div>
+
+          <!-- ✅ Price -->
+          <div class="pfy-section">
+            <button class="pfy-acc-head" type="button" onclick="toggleAcc('priceBody', this)" data-open="false">
+              <span>Price</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <div class="pfy-acc-body" id="priceBody">
+              <div class="pfy-radio-list">
+                <label class="pfy-radio">
+                  <input type="radio" name="price_range" value="0-199"
+                    {% if request.GET.price_range == "0-199" %}checked{% endif %}
+                    onchange="document.getElementById('filterForm').submit()">
+                  Under ₹199
+                </label>
+
+                <label class="pfy-radio">
+                  <input type="radio" name="price_range" value="200-399"
+                    {% if request.GET.price_range == "200-399" %}checked{% endif %}
+                    onchange="document.getElementById('filterForm').submit()">
+                  ₹200 - ₹399
+                </label>
+
+                <label class="pfy-radio">
+                  <input type="radio" name="price_range" value="400-699"
+                    {% if request.GET.price_range == "400-699" %}checked{% endif %}
+                    onchange="document.getElementById('filterForm').submit()">
+                  ₹400 - ₹699
+                </label>
+
+                <label class="pfy-radio">
+                  <input type="radio" name="price_range" value="700-999"
+                    {% if request.GET.price_range == "700-999" %}checked{% endif %}
+                    onchange="document.getElementById('filterForm').submit()">
+                  ₹700 - ₹999
+                </label>
+
+                <label class="pfy-radio">
+                  <input type="radio" name="price_range" value="1000+"
+                    {% if request.GET.price_range == "1000+" %}checked{% endif %}
+                    onchange="document.getElementById('filterForm').submit()">
+                  ₹1000+
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </aside>
+
+
+    <!-- ================= RIGHT PRODUCTS GRID (SAME AS INDEX CARD UI) ================= -->
+    <section class="pfy-products">
+
+      {% if products %}
+        <div class="pfy-cards">
+          {% for product in products %}
+            <div class="pfy-card">
+              <a href="{% url 'product_detail' product.id %}" class="pfy-imgwrap">
+                <img src="{{ product.image.url }}" alt="{{ product.title }}">
+              </a>
+
+              <div class="pfy-info">
+                <div class="pfy-name">{{ product.title }}</div>
+
+                <div class="pfy-price-row">
+                  <span class="pfy-price">₹{{ product.price|floatformat:0 }}</span>
+
+                  {% if product.mrp and product.mrp > product.price %}
+                    <span class="pfy-mrp">₹{{ product.mrp|floatformat:0 }}</span>
+                    <span class="pfy-off">{{ product.calc_discount_percent }}% off</span>
+                  {% endif %}
+                </div>
+
+                <div class="pfy-chipline">
+                  <span class="pfy-freedel">Free Delivery</span>
+                </div>
+
+                <div class="pfy-ratingline">
+                  <span class="pfy-ratingbadge">
+                    <span>4.2</span> <span class="star">★</span>
+                  </span>
+                  <span class="pfy-reviews">Reviews</span>
+                </div>
+
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div style="background:#fff;border:1px solid #ececf3;border-radius:16px;padding:24px;color:#6b7280;">
+          No products found in <b>{{ category.name }}</b>.
+        </div>
+      {% endif %}
+
+    </section>
+
+  </div>
+</div>
+
+
+<script>
+  // Accordion
+  function toggleAcc(bodyId, btn){
+    const body = document.getElementById(bodyId);
+    if(!body) return;
+
+    const isOpen = body.style.display === "block";
+    body.style.display = isOpen ? "none" : "block";
+
+    if(btn){
+      btn.setAttribute("data-open", isOpen ? "false" : "true");
+    }
+  }
+
+  function cssEscape(val){
+    if(window.CSS && CSS.escape) return CSS.escape(val);
+    return String(val).replace(/"/g, '\\"');
+  }
+
+  // Add/remove hidden inputs for multi filters (color)
+  function toggleMulti(param, value, btn){
+    const form = document.getElementById('filterForm');
+    if(!form) return;
+
+    const existing = form.querySelector(`input[type="hidden"][name="${param}"][value="${cssEscape(value)}"]`);
+    if(existing){
+      existing.remove();
+      if(btn) btn.classList.remove('is-active');
+    }else{
+      const i = document.createElement('input');
+      i.type = 'hidden';
+      i.name = param;
+      i.value = value;
+      form.appendChild(i);
+      if(btn) btn.classList.add('is-active');
+    }
+    form.submit();
+  }
+
+  // Single select (gender)
+  function setSingle(param, value, btn){
+    const form = document.getElementById('filterForm');
+    if(!form) return;
+
+    form.querySelectorAll(`input[type="hidden"][name="${param}"]`).forEach(x => x.remove());
+
+    const i = document.createElement('input');
+    i.type = 'hidden';
+    i.name = param;
+    i.value = value;
+    form.appendChild(i);
+
+    document.querySelectorAll('.pfy-pill').forEach(p => p.classList.remove('is-active'));
+    if(btn) btn.classList.add('is-active');
+
+    form.submit();
+  }
+
+  // Clear all but keep sort
+  function clearAllFilters(){
+    const params = new URLSearchParams(window.location.search);
+    const sort = params.get('sort');
+
+    if(sort){
+      window.location.href = window.location.pathname + '?sort=' + encodeURIComponent(sort);
+    }else{
+      window.location.href = window.location.pathname;
+    }
+  }
+
+  // Search in chips
+  function filterChips(txt){
+    const q = (txt || '').toLowerCase().trim();
+    const wrap = document.getElementById('chipWrap');
+    if(!wrap) return;
+
+    wrap.querySelectorAll('.pfy-chip').forEach(btn => {
+      const label = (btn.textContent || '').toLowerCase();
+      btn.style.display = label.includes(q) ? 'inline-flex' : 'none';
+    });
+  }
+
+  // ✅ Keep filters when sorting (very important)
+  function syncSortFormWithURL(){
+    const sortForm = document.getElementById('sortForm');
+    if(!sortForm) return;
+
+    sortForm.querySelectorAll('input[type="hidden"]').forEach(x => x.remove());
+
+    const params = new URLSearchParams(window.location.search);
+    params.forEach((v,k) => {
+      if(k === 'sort') return;
+      const i = document.createElement('input');
+      i.type = 'hidden';
+      i.name = k;
+      i.value = v;
+      sortForm.appendChild(i);
+    });
+  }
+
+  // ✅ Apply active state (important for UI)
+  function applyActiveFromURL(){
+    const params = new URLSearchParams(window.location.search);
+
+    // color active
+    const colors = params.getAll('color');
+    colors.forEach(c => {
+      document.querySelectorAll('.pfy-chip').forEach(ch => {
+        if((ch.textContent || '').trim() === c){
+          ch.classList.add('is-active');
+        }
+      });
+
+      // ensure hidden exists for re-submit
+      const form = document.getElementById('filterForm');
+      if(form){
+        const ex = form.querySelector(`input[type="hidden"][name="color"][value="${cssEscape(c)}"]`);
+        if(!ex){
+          const i = document.createElement('input');
+          i.type = 'hidden';
+          i.name = "color";
+          i.value = c;
+          form.appendChild(i);
+        }
+      }
+    });
+
+    // gender active
+    const gender = params.get('gender');
+    if(gender){
+      document.querySelectorAll('.pfy-pill').forEach(p => {
+        if((p.textContent || '').trim() === gender){
+          p.classList.add('is-active');
+        }
+      });
+
+      const form = document.getElementById('filterForm');
+      if(form){
+        form.querySelectorAll(`input[type="hidden"][name="gender"]`).forEach(x => x.remove());
+        const i = document.createElement('input');
+        i.type = 'hidden';
+        i.name = "gender";
+        i.value = gender;
+        form.appendChild(i);
+      }
+    }
+
+    // checkbox sync
+    ['fabric','size','dial_shape'].forEach(name => {
+      const values = params.getAll(name);
+      if(values.length){
+        document.querySelectorAll(`input[type="checkbox"][name="${name}"]`).forEach(cb => {
+          if(values.includes(cb.value)) cb.checked = true;
+        });
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    applyActiveFromURL();
+    syncSortFormWithURL();
+  });
+</script>
+
+{% endblock %}

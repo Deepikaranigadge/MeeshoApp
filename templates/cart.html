@@ -1,0 +1,700 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meesho Cart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="cart.css">
+</head>
+
+<body>
+<style>
+.meesho-logo h2 {
+  color: #9f2089;
+  font-weight: Bold;
+}
+
+body {
+  background: #f5f6f8;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  background: white;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.logo {
+  color: #9f2089;
+  font-weight: bold;
+}
+
+.steps span {
+  margin-right: 20px;
+  color: gray;
+}
+
+.steps .active {
+  color: #9f2089;
+  font-weight: bold;
+}
+
+.cart-container {
+  margin-top: 30px;
+}
+
+.cart-card {
+  background: #eef3ff;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  max-width: 600px;
+   margin: 0 auto;
+}
+.col-md-8{
+ max-width: 600px;
+   margin: 0 auto;
+}
+.cart-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.cart-info {
+  width: 100%;
+}
+
+.cart-info h6 {
+  margin: 5px 0;
+}
+
+.price {
+  color: #000;
+}
+
+.price span {
+  text-decoration: line-through;
+  color: gray;
+  margin-left: 5px;
+}
+
+.price b {
+  color: green;
+  margin-left: 5px;
+}
+
+.mall {
+  background: #673ab7;
+  color: white;
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.remove {
+  border: none;
+  background: none;
+  color: gray;
+  font-size: 14px;
+}
+
+.price-box {
+  padding: 20px;
+  border-radius: 8px;
+  width: 360px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.discount {
+  color: green;
+}
+
+.total {
+  font-weight: bold;
+}
+
+.discount-box {
+  background: #dff5ea;
+  padding: 10px;
+  border-radius: 6px;
+  color: green;
+  margin: 15px 0;
+}
+
+.continue-btn {
+  width: 100%;
+  background: #9f2089;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+}
+
+.note {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 10px;
+  color: gray;
+}
+
+/* Drawer styles */
+#editDrawer { width: 420px; }
+.drawer-title { font-size: 18px; font-weight: 700; }
+.qty-box button { width: 34px; height: 34px; }
+.continue-btn-drawer {
+  width: 100%;
+  background: #9f2089;
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+/* Edit button look exactly like text */
+.edit-btn {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #9f2089;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ✅ REMOVE MODAL (Meesho style) */
+.remove-modal{
+  border-radius: 12px;
+  border: 0;
+}
+.remove-cancel{
+  color:#9f2089;
+  font-weight:700;
+}
+.remove-confirm{
+  color:#9f2089;
+  font-weight:700;
+}
+
+/* ✅ Added: qty limit message style */
+.qty-limit-msg{
+  color:#d93025;
+  font-weight:700;
+  margin-top:10px;
+  display:none;
+}
+/* Make Size + Qty tight like Meesho */
+.drawer-row{
+  display:flex;
+  align-items:center;
+  gap:16px;   /* ⬅️ reduced gap */
+}
+
+.drawer-field{
+  display:flex;
+  align-items:center;
+  gap:6px;    /* ⬅️ reduced gap */
+}
+
+.drawer-label{
+  font-size:14px;
+  color:#111;
+  margin:0;
+  padding:0;
+}
+
+/* Smaller dropdown */
+.drawer-select{
+  width:80px;
+  height:34px;
+  padding:2px 8px;
+  border-radius:8px;
+  font-size:14px;
+}
+
+/* Qty controls compact */
+.qty-box{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.qty-box button{
+  width:34px;
+  height:34px;
+  padding:0;
+  border-radius:8px;
+}
+
+.qty-num{
+  min-width:24px;
+  text-align:center;
+  font-weight:600;
+  font-size:14px;
+}
+
+/* Red warning same tight spacing */
+.qty-limit-msg{
+  color:#d93025;
+  font-weight:600;
+  font-size:14px;
+  margin-top:6px;
+}
+#editDrawer{
+  width:380px;   /* Meesho drawer is narrow */
+}
+/* ✅ Cart price row like Meesho */
+.price-line{
+  display:flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 6px 0 8px;
+}
+
+.price-line .sell{
+  font-weight: 500;
+  font-size: 20px;
+  color:#111;
+}
+
+.price-line .mrp{
+  font-weight: 500;
+  font-size: 14px;
+  color:#9ca3af;
+  text-decoration: line-through;
+}
+
+.price-line .off{
+  font-weight: 500;
+  font-size: 14px;
+  
+}
+/* ✅ Safety banner below Continue */
+.safe-banner{
+  border: 1px solid #e7e7ee;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+.safe-banner img{
+  width: 100%;
+  display: block;
+}
+/* ✅ Sold by row like Meesho */
+.soldby-row{
+  border-top:1px solid #e7e7ee;
+  padding-top:10px;
+  margin-top:10px;
+  color:#6b7280;
+  font-size:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.soldby-row .free-delivery{ color:#111827; }
+</style>
+
+{% include "partials/checkout_header.html" with active_step=1 %}
+
+<div class="container cart-container">
+  <div class="row">
+
+    <!-- LEFT: PRODUCT LIST -->
+    <div class="col-md-8">
+      <h5>Product Details</h5>
+
+      {% for item in cart_items %}
+      <div class="cart-card">
+        <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+        <div class="cart-info">
+
+          <!-- TITLE + EDIT -->
+          <div class="d-flex justify-content-between align-items-start">
+            <h6 class="mb-1">{{ item.product.title }}</h6>
+
+            <!-- ✅ EDIT BUTTON (fixed: type + proper closing bracket) -->
+     <button type="button"
+        class="edit-btn"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#editDrawer"
+        data-item-id="{{ item.id }}"
+        data-title="{{ item.product.title }}"
+        data-image="{% if item.product.image %}{{ item.product.image.url }}{% endif %}"
+        data-price="{{ item.product.price }}"
+        data-mrp="{{ item.product.mrp }}"
+        data-off="{{ item.product.calc_discount_percent }}"
+        data-size="{{ item.size|default:'Free Size' }}"
+        data-qty="{{ item.qty }}"
+        data-sizes="{% for s in item.product.sizes.all %}{{ s.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
+  EDIT
+</button>
+
+
+          </div>
+
+        <div class="price-line">
+  <span class="sell">₹{{ item.product.price|floatformat:0 }}</span>
+
+  {% if item.product.mrp > item.product.price %}
+    <span class="mrp">₹{{ item.product.mrp|floatformat:0 }}</span>
+    <span class="off">{{ item.product.calc_discount_percent }}% off</span>
+  {% endif %}
+</div>
+
+
+          <p>Size: {{ item.size|default:"Free Size" }} &nbsp; | &nbsp; Qty: {{ item.qty }}</p>
+
+          <!-- ✅ Remove button (opens modal) -->
+          <button type="button"
+                  class="remove btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#removeModal"
+                  data-item-id="{{ item.id }}"
+                  data-title="{{ item.product.title }}">
+            ✕ REMOVE
+          </button>
+ <!-- ✅ SOLD BY (ADD THIS) -->
+    <div class="soldby-row">
+      <span>Sold by: {{ item.product.seller_name }}</span>
+      <span class="free-delivery">Free Delivery</span>
+    </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>Your cart is empty.</p>
+      {% endfor %}
+    </div>
+
+    <!-- RIGHT: PRICE DETAILS -->
+    <div class="col-md-4">
+      <div class="price-box">
+        <h6>Price Details ({{ total_items }} Items)</h6>
+
+        <div class="price-row">
+          <span>Total Product Price</span>
+          <span>₹{{ total_price|floatformat:0 }}</span>
+        </div>
+
+        <div class="price-row discount">
+          <span>Total Discounts</span>
+          <span>-₹{{ total_discount|floatformat:0 }}</span>
+        </div>
+
+        <hr>
+
+        <div class="price-row total">
+          <span>Order Total</span>
+          <span>₹{{ order_total|floatformat:0 }}</span>
+        </div>
+
+       <div class="discount-box">
+    🎉 Yay! Your total discount is ₹{{ total_discount|floatformat:0 }}
+  </div>
+        <p class="note">Clicking on Continue will not deduct any money</p>
+        <a href="{% url 'address_list' %}" class="continue-btn btn btn-primary">Continue</a>
+        <div class="safe-banner">
+           <img src="{% static 'images/meesho_safe.jpg' %}" alt="Your Safety, Our Priority">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RIGHT SIDE EDIT DRAWER -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editDrawer" aria-labelledby="editDrawerLabel">
+  <div class="offcanvas-header border-bottom">
+    <div class="drawer-title" id="editDrawerLabel">EDIT ITEM</div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <!-- PRODUCT INFO -->
+    <div class="d-flex gap-3">
+      <img id="edImg" src="" style="width:75px;height:75px;object-fit:cover;border-radius:10px;background:#f2f2f2;">
+      <div>
+        <div id="edTitle" class="fw-semibold" style="font-size:14px;"></div>
+        <div class="mt-1">
+          <span class="fw-bold" id="edPriceText">₹0</span>
+           <span id="edMrp" class="text-muted ms-2" style="font-size:12px; text-decoration:line-through; display:none;"></span>
+           <span id="edOff" class="ms-2" style="font-size:12px; color:#16a34a; font-weight:800; display:none;"></span>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SIZE + QTY -->
+   <div class="drawer-row mt-3">
+
+  <div class="drawer-field">
+    <span class="drawer-label">Size</span>
+    <select class="form-select form-select-sm drawer-select" id="edSize"></select>
+  </div>
+
+  <div class="drawer-field">
+    <span class="drawer-label">Qty</span>
+
+    <div class="qty-box">
+      <button type="button" class="btn btn-outline-secondary btn-sm" id="qtyMinus">−</button>
+      <span id="edQty" class="qty-num">1</span>
+      <button type="button" class="btn btn-outline-secondary btn-sm" id="qtyPlus">+</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="qtyLimitMsg" class="qty-limit-msg">
+  You can add upto 10 units in one order
+</div>
+
+
+    <hr class="my-4">
+
+    <!-- TOTAL -->
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="fw-semibold" style="font-size:18px;">Total Price</div>
+      <div class="fw-bold" id="edTotal" style="font-size:18px;">₹0</div>
+    </div>
+
+    <!-- CONTINUE -->
+    <div class="mt-4">
+      <form method="POST" id="updateForm">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <input type="hidden" name="size" id="formSize">
+        <input type="hidden" name="qty" id="formQty">
+        <button type="submit" class="continue-btn-drawer">Continue</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ✅ REMOVE CONFIRM MODAL (Meesho style) -->
+<div class="modal fade" id="removeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content remove-modal">
+      <div class="modal-body p-4">
+
+        <button type="button" class="btn-close float-end" data-bs-dismiss="modal"></button>
+
+        <!-- ✅ Empty title (filled automatically) -->
+        <h5 class="fw-bold mt-3" id="removeModalTitle"></h5>
+
+        <p class="text-muted mb-0" style="margin-top:10px;">
+          Do you want to remove this product from cart?
+        </p>
+
+        <div class="d-flex justify-content-end gap-4 mt-4">
+          <button type="button" class="btn btn-link text-decoration-none remove-cancel" data-bs-dismiss="modal">
+            CANCEL
+          </button>
+
+          <form method="POST" id="removeModalForm">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link text-decoration-none remove-confirm">
+              REMOVE
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS (ONLY ONCE, keep it here at bottom) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const edMrp = document.getElementById("edMrp");
+  const edOff = document.getElementById("edOff");
+  const drawer = document.getElementById("editDrawer");
+
+  const edImg = document.getElementById("edImg");
+  const edTitle = document.getElementById("edTitle");
+  const edPriceText = document.getElementById("edPriceText");
+  const edSize = document.getElementById("edSize");
+  const edQty = document.getElementById("edQty");
+  const edTotal = document.getElementById("edTotal");
+
+  const qtyMinus = document.getElementById("qtyMinus");
+  const qtyPlus = document.getElementById("qtyPlus");
+
+  const updateForm = document.getElementById("updateForm");
+  const formSize = document.getElementById("formSize");
+  const formQty = document.getElementById("formQty");
+
+  const qtyLimitMsg = document.getElementById("qtyLimitMsg");
+  const MAX_QTY = 10;
+
+  let unitPrice = 0;
+
+  function setSizeOptions(sizesStr, selectedSize){
+    edSize.innerHTML = "";
+
+    let sizes = (sizesStr || "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    if(sizes.length === 0){
+      sizes = ["Free Size"];
+    }
+
+    sizes.forEach(size => {
+      const opt = document.createElement("option");
+      opt.value = size;
+      opt.textContent = size;
+      edSize.appendChild(opt);
+    });
+
+    if(sizes.includes(selectedSize)){
+      edSize.value = selectedSize;
+    } else {
+      edSize.value = sizes[0];
+    }
+  }
+
+  function refreshTotal(){
+    const qty = parseInt(edQty.textContent || "1", 10);
+    const total = unitPrice * qty;
+    edTotal.textContent = "₹" + total.toFixed(0);
+
+    formSize.value = edSize.value;
+    formQty.value = qty;
+
+    if(qty >= MAX_QTY){
+      qtyLimitMsg.style.display = "block";
+      qtyPlus.disabled = true;
+      qtyPlus.classList.add("disabled");
+    }else{
+      qtyLimitMsg.style.display = "none";
+      qtyPlus.disabled = false;
+      qtyPlus.classList.remove("disabled");
+    }
+  }
+
+  drawer.addEventListener("show.bs.offcanvas", function (event) {
+    const btn = event.relatedTarget;
+    if(!btn) return;
+
+    const itemId = btn.getAttribute("data-item-id");
+    const title = btn.getAttribute("data-title") || "";
+    const image = btn.getAttribute("data-image") || "";
+    const price = btn.getAttribute("data-price") || "0";
+
+    // ✅ NEW: get mrp & off from button
+    const mrp = btn.getAttribute("data-mrp") || "";
+    const off = btn.getAttribute("data-off") || "";
+
+    const size = btn.getAttribute("data-size") || "Free Size";
+    const qty = btn.getAttribute("data-qty") || "1";
+    const sizesStr = btn.getAttribute("data-sizes") || "";
+
+    edTitle.textContent = title;
+
+    if(image){
+      edImg.src = image;
+      edImg.style.display = "block";
+    } else {
+      edImg.style.display = "none";
+    }
+
+    unitPrice = parseFloat(price) || 0;
+    edPriceText.textContent = "₹" + (parseFloat(price) || 0);
+
+    // ✅ SHOW DISCOUNT IN DRAWER (MRP + %off)
+    const mrpNum = parseFloat(mrp);
+    const priceNum = parseFloat(price);
+
+    if(!isNaN(mrpNum) && !isNaN(priceNum) && mrpNum > priceNum){
+      edMrp.style.display = "inline";
+      edMrp.textContent = "₹" + Math.round(mrpNum);
+
+      let offNum = parseFloat(off);
+      if(isNaN(offNum) || offNum <= 0){
+        offNum = Math.round((1 - (priceNum / mrpNum)) * 100);
+      }
+
+      edOff.style.display = "inline";
+      edOff.textContent = offNum + "% off";
+    } else {
+      edMrp.style.display = "none";
+      edOff.style.display = "none";
+    }
+
+    setSizeOptions(sizesStr, size);
+
+    let q = parseInt(qty || "1", 10);
+    if(isNaN(q) || q < 1) q = 1;
+    if(q > MAX_QTY) q = MAX_QTY;
+    edQty.textContent = q;
+
+    updateForm.action = `/cart/update/${itemId}/`;
+
+    refreshTotal();
+  });
+
+  edSize.addEventListener("change", refreshTotal);
+
+  qtyMinus.addEventListener("click", () => {
+    let q = parseInt(edQty.textContent || "1", 10);
+    q = Math.max(1, q - 1);
+    edQty.textContent = q;
+    refreshTotal();
+  });
+
+  qtyPlus.addEventListener("click", () => {
+    let q = parseInt(edQty.textContent || "1", 10);
+    q = q + 1;
+    if(q > MAX_QTY) q = MAX_QTY;
+    edQty.textContent = q;
+    refreshTotal();
+  });
+
+  document.querySelectorAll('[data-bs-target="#editDrawer"]').forEach(btn => {
+    btn.addEventListener("click", function(){
+      const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(drawer);
+      offcanvas.show(this);
+    });
+  });
+
+  const removeModal = document.getElementById("removeModal");
+  const removeTitle = document.getElementById("removeModalTitle");
+  const removeForm  = document.getElementById("removeModalForm");
+
+  removeModal.addEventListener("show.bs.modal", function (event) {
+    const btn = event.relatedTarget;
+    if(!btn) return;
+
+    const itemId = btn.getAttribute("data-item-id");
+    const title  = btn.getAttribute("data-title") || "";
+
+    removeTitle.textContent = title;
+    removeForm.action = `/cart/remove/${itemId}/`;
+  });
+</script>
+
+
+
+</body>
+</html>
