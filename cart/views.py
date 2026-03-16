@@ -1,6 +1,5 @@
 from decimal import Decimal
 from datetime import timedelta
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -44,6 +43,7 @@ def address_list(request):
     })
 
 
+@login_required(login_url='login')
 def add_to_cart(request, product_id):
     if request.method != "POST":
         return redirect("product_detail", id=product_id)
@@ -61,6 +61,7 @@ def add_to_cart(request, product_id):
         size=size,
         defaults={"qty": 1}
     )
+
     if not created:
         item.qty += 1
         item.save()
@@ -361,8 +362,7 @@ def buy_now_review(request, product_id):
 def empty_cart(request):
     return render(request, "empty_cart.html")
 
-    from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+
 from users.models import Address
 
 @login_required
