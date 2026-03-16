@@ -22,9 +22,10 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
           script: |
             cd ~/fsd_fe/MeeshoApp
-            git pull origin main
+            git fetch origin
+            git reset --hard origin/main
             sudo docker build -t meeshoapp .
             sudo docker stop meeshoapp_container || true
             sudo docker rm meeshoapp_container || true
-            sudo docker run -d --env-file .env --name meeshoapp_container -p 8000:8000 meeshoapp
+            sudo docker run -d -p 8000:8000 --env-file .env --name meeshoapp_container meeshoapp
             sudo docker exec meeshoapp_container python manage.py collectstatic --noinput
